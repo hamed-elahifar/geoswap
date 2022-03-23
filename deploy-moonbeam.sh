@@ -1,17 +1,21 @@
 #!/bin/bash
 
+cd $(dirname $0)
+
 cp ./.env ./Tokens/
 cp ./.env ./Factory/
 cp ./.env ./Farm/
 
-echo "Deploying Tokens..."
+echo " ++++++++++ Deploying Tokens..."
 cd Tokens
 npm run moonbeam
 
-echo "Deploying Factory..."
+echo " ++++++++++ Deploying Factory..."
+cd ..
 cd Factory
 npm run moonbeam
 
-echo "Deploying Farm..."
+echo " ++++++++++ Deploying Farm..."
+cd ..
 cd Farm
 npm run moonbeam
