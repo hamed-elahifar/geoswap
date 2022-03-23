@@ -1,0 +1,28 @@
+console.log(
+  "============================== Start Deploying =============================="
+);
+
+const sleepDuration = 2000;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+(async () => {
+  require("./deploy-USDC");
+  await sleep(sleepDuration);
+  console.log();
+
+  require("./deploy-USDT");
+  await sleep(sleepDuration);
+  console.log();
+
+  // require("./deploy-WETH");
+  // await sleep(sleepDuration);
+  // console.log();
+
+  require("./deploy-Multicall2");
+  await sleep(sleepDuration);
+  console.log();
+
+  // require("./deploy-factory");
+  // await sleep(sleepDuration);
+  // console.log();
+})();

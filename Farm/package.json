@@ -1,0 +1,20 @@
+{
+  "name": "hardhat-project",
+  "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-waffle": "^2.0.2",
+    "dotenv": "^16.0.0",
+    "hardhat": "^2.0.10",
+    "@openzeppelin/contracts": "^3.4.1",
+    "@uniswap/lib": "^4.0.1-alpha",
+    "@uniswap/v2-core": "^1.0.1",
+    "chai": "^4.3.6",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.5.4"
+  },
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "moonbeam": "npx hardhat run --network moonbeam scripts/deploy-farm.js",
+    "ganache": "npx hardhat run --network ganache scripts/deploy-farm.js"
+  }
+}
