@@ -1,41 +1,68 @@
 {
-  "address": "0x2A6f126356C5a036c59F08D954A8E065FF501385",
+  "address": "0x067f159043ED9c5303Ef2b8f4d5F655F37eb5c66",
   "abi": [
     {
       "type": "constructor",
       "payable": false,
-      "inputs": []
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_geos"
+        },
+        {
+          "type": "uint256",
+          "name": "_geosPerBlock"
+        },
+        {
+          "type": "uint256",
+          "name": "_startBlock"
+        },
+        {
+          "type": "uint256",
+          "name": "_totalGeos"
+        }
+      ]
     },
     {
       "type": "event",
       "anonymous": false,
-      "name": "AddMinter",
+      "name": "AddPool",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "allocPoint",
+          "indexed": false
+        },
+        {
+          "type": "address",
+          "name": "lpToken",
+          "indexed": false
+        },
+        {
+          "type": "bool",
+          "name": "withUpdate",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Deposit",
       "inputs": [
         {
           "type": "address",
           "name": "user",
           "indexed": true
-        }
-      ]
-    },
-    {
-      "type": "event",
-      "anonymous": false,
-      "name": "Approval",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "owner",
-          "indexed": true
         },
         {
-          "type": "address",
-          "name": "spender",
+          "type": "uint256",
+          "name": "pid",
           "indexed": true
         },
         {
           "type": "uint256",
-          "name": "value",
+          "name": "amount",
           "indexed": false
         }
       ]
@@ -43,43 +70,21 @@
     {
       "type": "event",
       "anonymous": false,
-      "name": "DelegateChanged",
+      "name": "EmergencyWithdraw",
       "inputs": [
         {
           "type": "address",
-          "name": "delegator",
-          "indexed": true
-        },
-        {
-          "type": "address",
-          "name": "fromDelegate",
-          "indexed": true
-        },
-        {
-          "type": "address",
-          "name": "toDelegate",
-          "indexed": true
-        }
-      ]
-    },
-    {
-      "type": "event",
-      "anonymous": false,
-      "name": "DelegateVotesChanged",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "delegate",
+          "name": "user",
           "indexed": true
         },
         {
           "type": "uint256",
-          "name": "previousBalance",
-          "indexed": false
+          "name": "pid",
+          "indexed": true
         },
         {
           "type": "uint256",
-          "name": "newBalance",
+          "name": "amount",
           "indexed": false
         }
       ]
@@ -104,160 +109,134 @@
     {
       "type": "event",
       "anonymous": false,
-      "name": "RemoveMinter",
+      "name": "SetEmissionRate",
       "inputs": [
         {
-          "type": "address",
-          "name": "user",
-          "indexed": true
+          "type": "uint256",
+          "name": "geosPerBlock",
+          "indexed": false
         }
       ]
     },
     {
       "type": "event",
       "anonymous": false,
-      "name": "Transfer",
+      "name": "SetPool",
       "inputs": [
         {
-          "type": "address",
-          "name": "from",
-          "indexed": true
-        },
-        {
-          "type": "address",
-          "name": "to",
+          "type": "uint256",
+          "name": "pid",
           "indexed": true
         },
         {
           "type": "uint256",
-          "name": "value",
+          "name": "allocPoint",
+          "indexed": false
+        },
+        {
+          "type": "bool",
+          "name": "withUpdate",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "SetTotalGeos",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "totalGeos",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Withdraw",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "user",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "pid",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "amount",
           "indexed": false
         }
       ]
     },
     {
       "type": "function",
-      "name": "DELEGATION_TYPEHASH",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "bytes32"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "DOMAIN_TYPEHASH",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "bytes32"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "_minters",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bool"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "addMinter",
+      "name": "add",
       "constant": false,
       "payable": false,
       "inputs": [
         {
+          "type": "uint256",
+          "name": "_allocPoint"
+        },
+        {
           "type": "address",
-          "name": "_user"
+          "name": "_lpToken"
+        },
+        {
+          "type": "bool",
+          "name": "_withUpdate"
         }
       ],
       "outputs": []
     },
     {
       "type": "function",
-      "name": "allowance",
+      "name": "burnAddress",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "owner"
-        },
-        {
-          "type": "address",
-          "name": "spender"
-        }
-      ],
+      "inputs": [],
       "outputs": [
         {
-          "type": "uint256"
+          "type": "address"
         }
       ]
     },
     {
       "type": "function",
-      "name": "approve",
-      "constant": false,
+      "name": "calculate",
+      "constant": true,
+      "stateMutability": "view",
       "payable": false,
       "inputs": [
-        {
-          "type": "address",
-          "name": "spender"
-        },
         {
           "type": "uint256",
-          "name": "amount"
+          "name": "_reward"
         }
       ],
       "outputs": [
         {
-          "type": "bool"
+          "type": "uint256",
+          "name": "farmGeos"
         }
       ]
     },
     {
       "type": "function",
-      "name": "balanceOf",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "account"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "burn",
+      "name": "deposit",
       "constant": false,
       "payable": false,
       "inputs": [
+        {
+          "type": "uint256",
+          "name": "_pid"
+        },
         {
           "type": "uint256",
           "name": "_amount"
@@ -267,191 +246,33 @@
     },
     {
       "type": "function",
-      "name": "checkpoints",
-      "constant": true,
-      "stateMutability": "view",
+      "name": "emergencyWithdraw",
+      "constant": false,
       "payable": false,
       "inputs": [
         {
-          "type": "address"
-        },
-        {
-          "type": "uint32"
+          "type": "uint256",
+          "name": "_pid"
         }
       ],
-      "outputs": [
-        {
-          "type": "uint32",
-          "name": "fromBlock"
-        },
-        {
-          "type": "uint256",
-          "name": "votes"
-        }
-      ]
+      "outputs": []
     },
     {
       "type": "function",
-      "name": "decimals",
+      "name": "geos",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
       "inputs": [],
       "outputs": [
         {
-          "type": "uint8"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "decreaseAllowance",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "spender"
-        },
-        {
-          "type": "uint256",
-          "name": "subtractedValue"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bool"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "delegate",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "delegatee"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "delegateBySig",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "delegatee"
-        },
-        {
-          "type": "uint256",
-          "name": "nonce"
-        },
-        {
-          "type": "uint256",
-          "name": "expiry"
-        },
-        {
-          "type": "uint8",
-          "name": "v"
-        },
-        {
-          "type": "bytes32",
-          "name": "r"
-        },
-        {
-          "type": "bytes32",
-          "name": "s"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "delegates",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "delegator"
-        }
-      ],
-      "outputs": [
-        {
           "type": "address"
         }
       ]
     },
     {
       "type": "function",
-      "name": "getCurrentVotes",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "account"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "getPriorVotes",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "account"
-        },
-        {
-          "type": "uint256",
-          "name": "blockNumber"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "increaseAllowance",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "spender"
-        },
-        {
-          "type": "uint256",
-          "name": "addedValue"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bool"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "maxSupply",
+      "name": "geosPerBlock",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
@@ -464,24 +285,63 @@
     },
     {
       "type": "function",
-      "name": "mint",
-      "constant": false,
+      "name": "getBlockCount",
+      "constant": true,
+      "stateMutability": "view",
       "payable": false,
       "inputs": [
         {
-          "type": "address",
+          "type": "uint256",
+          "name": "_from"
+        },
+        {
+          "type": "uint256",
           "name": "_to"
-        },
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "massUpdatePools",
+      "constant": false,
+      "payable": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "migrate",
+      "constant": false,
+      "payable": false,
+      "inputs": [
         {
           "type": "uint256",
-          "name": "_amount"
+          "name": "_pid"
         }
       ],
       "outputs": []
     },
     {
       "type": "function",
-      "name": "minterLength",
+      "name": "migrator",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "mintedGeos",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
@@ -489,53 +349,6 @@
       "outputs": [
         {
           "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "name",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "nonces",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "numCheckpoints",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint32"
         }
       ]
     },
@@ -554,41 +367,59 @@
     },
     {
       "type": "function",
-      "name": "removeMinter",
-      "constant": false,
+      "name": "pendingGeos",
+      "constant": true,
+      "stateMutability": "view",
       "payable": false,
       "inputs": [
+        {
+          "type": "uint256",
+          "name": "_pid"
+        },
         {
           "type": "address",
           "name": "_user"
         }
       ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "renounceOwnership",
-      "constant": false,
-      "payable": false,
-      "inputs": [],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "symbol",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
       "outputs": [
         {
-          "type": "string"
+          "type": "uint256"
         }
       ]
     },
     {
       "type": "function",
-      "name": "totalSupply",
+      "name": "poolInfo",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "address",
+          "name": "lpToken"
+        },
+        {
+          "type": "uint256",
+          "name": "allocPoint"
+        },
+        {
+          "type": "uint256",
+          "name": "lastRewardBlock"
+        },
+        {
+          "type": "uint256",
+          "name": "accGeosPerShare"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "poolLength",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
@@ -601,47 +432,125 @@
     },
     {
       "type": "function",
-      "name": "transfer",
+      "name": "renounceOwnership",
+      "constant": false,
+      "payable": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "safeGeosTransfer",
       "constant": false,
       "payable": false,
       "inputs": [
         {
           "type": "address",
-          "name": "recipient"
+          "name": "_to"
         },
         {
           "type": "uint256",
-          "name": "amount"
+          "name": "_amount"
         }
       ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "set",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_pid"
+        },
+        {
+          "type": "uint256",
+          "name": "_allocPoint"
+        },
+        {
+          "type": "bool",
+          "name": "_withUpdate"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setEmissionRate",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_geosPerBlock"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setMigrator",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_migrator"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setTotalGeos",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_totalGeos"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "startBlock",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
       "outputs": [
         {
-          "type": "bool"
+          "type": "uint256"
         }
       ]
     },
     {
       "type": "function",
-      "name": "transferFrom",
-      "constant": false,
+      "name": "totalAllocPoint",
+      "constant": true,
+      "stateMutability": "view",
       "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "sender"
-        },
-        {
-          "type": "address",
-          "name": "recipient"
-        },
-        {
-          "type": "uint256",
-          "name": "amount"
-        }
-      ],
+      "inputs": [],
       "outputs": [
         {
-          "type": "bool"
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "totalGeos",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
         }
       ]
     },
@@ -654,6 +563,61 @@
         {
           "type": "address",
           "name": "newOwner"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "updatePool",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_pid"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "userInfo",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256"
+        },
+        {
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": "amount"
+        },
+        {
+          "type": "uint256",
+          "name": "rewardDebt"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "withdraw",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_pid"
+        },
+        {
+          "type": "uint256",
+          "name": "_amount"
         }
       ],
       "outputs": []
