@@ -1,0 +1,51 @@
+ ++++++++++ Deploying Tokens...
+
+> geoswap@1.0.0 moonbeam
+> npx hardhat run --network moonbeam scripts/deploy.js
+
+You are using a version of Node.js that is not supported by Hardhat, and it may work incorrectly, or not work at all.
+
+Please, make sure you are using a supported version of Node.js.
+
+To learn more about which versions of Node.js are supported go to https://hardhat.org/nodejs-versions
+============================== Start Deploying ==============================
+Deployer: 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+Deployer balance: 4710285421500000000
+USDC Token address: 0xbEaF76328EAFa7ce3a34388dBEFdb8940983cB27
+
+Deployer: 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+Deployer balance: 4710285421500000000
+USDT Token address: 0x7839c49478A2b27636C0E4495862DBB02080Da3E
+
+ ++++++++++ Deploying Factory...
+
+> moonbeam
+> npx hardhat run --network moonbeam scripts/deploy.js
+
+Deploying contracts using 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+WETH deployed to : 0x8d35D2cBbbCE62A68214Fcd17415ebd24AF780Be
+Factory deployed to : 0x5d744b5bEc859AC64EEbb4d1176dD03A3Dc205A5
+Router V02 deployed to :  0xA90a28213d5fE215634e7Ace7B5d6905A5c933E2
+Multicall v2 address: 0x0cD1899a66DFC0c0948A994b8bFed11d51782B30
+ ++++++++++ Deploying Farm...
+
+> moonbeam
+> npx hardhat run --network moonbeam scripts/deploy.js
+
+You are using a version of Node.js that is not supported by Hardhat, and it may work incorrectly, or not work at all.
+
+Please, make sure you are using a supported version of Node.js.
+
+To learn more about which versions of Node.js are supported go to https://hardhat.org/nodejs-versions
+Deployer: 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+Deployer balance: 4693419405500000000
+Token address: 0xc43c9B4D8a35DE82B6e212A3c868160Bfdccf747
+Farm address: 0xF9C535B7c4b10DD2bedf2C9fF5e4E87EEC74D205
+ ++++++++++ Deploying Staking...
+
+> moonbeam
+> npx hardhat run --network moonbeam scripts/deploy.js
+
+Deploying contracts using 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+FARM_REWARD_HOLDER 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+Token Farm address: 0x4d011aB90B8Cb4C797cdc83aedEe0Df3f9Ac6F75
