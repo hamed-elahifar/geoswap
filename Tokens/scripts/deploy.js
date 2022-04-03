@@ -17,12 +17,4 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   // require("./deploy-WETH");
   // await sleep(sleepDuration);
   // console.log();
-
-  require("./deploy-Multicall2");
-  await sleep(sleepDuration);
-  console.log();
-
-  // require("./deploy-factory");
-  // await sleep(sleepDuration);
-  // console.log();
 })();

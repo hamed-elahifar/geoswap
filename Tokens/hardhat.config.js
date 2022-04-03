@@ -74,11 +74,11 @@ module.exports = {
   networks: {
     ganache: {
       url: "http://127.0.0.1:7545",
-      accounts: [process.env.GANACHE_PRIVATE_KEY],
+      accounts: [process.env.PRIVATE_KEY],
     },
     moonbeam: {
       url: "https://rpc.api.moonbase.moonbeam.network",
-      accounts: [process.env.MOONBEAM_PRIVATE_KEY],
+      accounts: [process.env.PRIVATE_KEY],
     },
   },
 };

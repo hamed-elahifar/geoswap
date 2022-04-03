@@ -2,9 +2,10 @@
 
 cd $(dirname $0)
 
-cp ./.env ./Tokens/
-cp ./.env ./Factory/
-cp ./.env ./Farm/
+cp -rf ./.env ./Tokens/
+cp -rf ./.env ./Factory/
+cp -rf ./.env ./Farm/
+cp -rf ./.env ./Staking/
 
 echo " ++++++++++ Deploying Tokens..."
 cd Tokens
@@ -18,4 +19,9 @@ npm run moonbeam
 echo " ++++++++++ Deploying Farm..."
 cd ..
 cd Farm
+npm run moonbeam
+
+echo " ++++++++++ Deploying Staking..."
+cd ..
+cd Staking
 npm run moonbeam

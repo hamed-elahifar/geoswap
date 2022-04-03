@@ -14,7 +14,7 @@
   },
   "scripts": {
     "compile": "npx hardhat compile",
-    "moonbeam": "npx hardhat run --network moonbeam scripts/deploy-farm.js",
-    "ganache": "npx hardhat run --network ganache scripts/deploy-farm.js"
+    "moonbeam": "npx hardhat run --network moonbeam scripts/deploy.js",
+    "ganache": "npx hardhat run --network ganache scripts/deploy.js"
   }
 }

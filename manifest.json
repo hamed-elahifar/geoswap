@@ -1,0 +1,21 @@
+{
+  "name": "GEO Swap Token List",
+  "version": {
+    "major": 0,
+    "minor": 2,
+    "patch": 0
+  },
+  "keywords": ["GEOS", "GEO Swap", "Swap", "Token", "List"],
+  "logoURI": "https://gemini.com/static/images/loader.png",
+  "timestamp": "2022-03-03T16:00:00+0000",
+  "tokens": [
+    {
+      "name": "GEO SWAP",
+      "chainId": 1,
+      "symbol": "GEOS",
+      "decimals": 18,
+      "address": "0x111111111117dc0aa78b770fa6a738034120c302",
+      "logoURI": "https://gemini.com/images/currencies/icons/default/1inch.svg"
+    }
+  ]
+}

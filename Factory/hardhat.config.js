@@ -13,7 +13,7 @@ module.exports = {
     hardhat: {},
     moonbeam: {
       url: "https://rpc.api.moonbase.moonbeam.network",
-      accounts: [process.env.MOONBEAM_PRIVATE_KEY],
+      accounts: [process.env.PRIVATE_KEY],
       chainId: 1287,
     },
     // dev: {
@@ -24,13 +24,13 @@ module.exports = {
     // },
     ganache: {
       url: "http://127.0.0.1:7545",
-      accounts: [process.env.GANACHE_PRIVATE_KEY],
+      accounts: [process.env.PRIVATE_KEY],
       network_id: "5777",
       chainId: 1337,
     },
     ropsten: {
       url: "https://ropsten.infura.io/v3/f7d1c49c04394eeab54c419a185c9b1d",
-      accounts: [process.env.ROPSTEN_PRIVATE_KEY],
+      accounts: [process.env.PRIVATE_KEY],
       network_id: "3",
       chainId: 3,
     },

@@ -1,41 +1,88 @@
 {
-  "address": "0xe9116c3F356A666aa69f918679100558023Cf213",
+  "address": "0xA11546b9821678407De859dB3aF5dC86E462be91",
   "abi": [
     {
       "type": "constructor",
       "payable": false,
-      "inputs": []
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_rewardHolder"
+        }
+      ]
     },
     {
       "type": "event",
       "anonymous": false,
-      "name": "AddMinter",
+      "name": "AddCampaignInfo",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "campaignID",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "stakingToken",
+          "indexed": false
+        },
+        {
+          "type": "address",
+          "name": "rewardToken",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "startTimestamp",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "AddRewardInfo",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "campaignID",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "phase",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "endTimestamp",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "rewardPerTimestamp",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Deposit",
       "inputs": [
         {
           "type": "address",
           "name": "user",
           "indexed": true
-        }
-      ]
-    },
-    {
-      "type": "event",
-      "anonymous": false,
-      "name": "Approval",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "owner",
-          "indexed": true
-        },
-        {
-          "type": "address",
-          "name": "spender",
-          "indexed": true
         },
         {
           "type": "uint256",
-          "name": "value",
+          "name": "amount",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "campaign",
           "indexed": false
         }
       ]
@@ -43,43 +90,21 @@
     {
       "type": "event",
       "anonymous": false,
-      "name": "DelegateChanged",
+      "name": "EmergencyWithdraw",
       "inputs": [
         {
           "type": "address",
-          "name": "delegator",
-          "indexed": true
-        },
-        {
-          "type": "address",
-          "name": "fromDelegate",
-          "indexed": true
-        },
-        {
-          "type": "address",
-          "name": "toDelegate",
-          "indexed": true
-        }
-      ]
-    },
-    {
-      "type": "event",
-      "anonymous": false,
-      "name": "DelegateVotesChanged",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "delegate",
+          "name": "user",
           "indexed": true
         },
         {
           "type": "uint256",
-          "name": "previousBalance",
+          "name": "amount",
           "indexed": false
         },
         {
           "type": "uint256",
-          "name": "newBalance",
+          "name": "campaign",
           "indexed": false
         }
       ]
@@ -104,146 +129,185 @@
     {
       "type": "event",
       "anonymous": false,
-      "name": "RemoveMinter",
+      "name": "SetRewardHolder",
       "inputs": [
         {
           "type": "address",
-          "name": "user",
-          "indexed": true
+          "name": "rewardHolder",
+          "indexed": false
         }
       ]
     },
     {
       "type": "event",
       "anonymous": false,
-      "name": "Transfer",
+      "name": "SetRewardInfoLimit",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "rewardInfoLimit",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Withdraw",
       "inputs": [
         {
           "type": "address",
-          "name": "from",
-          "indexed": true
-        },
-        {
-          "type": "address",
-          "name": "to",
+          "name": "user",
           "indexed": true
         },
         {
           "type": "uint256",
-          "name": "value",
+          "name": "amount",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "campaign",
           "indexed": false
         }
       ]
     },
     {
       "type": "function",
-      "name": "DELEGATION_TYPEHASH",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "bytes32"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "DOMAIN_TYPEHASH",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "bytes32"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "_minters",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bool"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "addMinter",
+      "name": "addCampaignInfo",
       "constant": false,
       "payable": false,
       "inputs": [
         {
           "type": "address",
-          "name": "_user"
+          "name": "_stakingToken"
+        },
+        {
+          "type": "address",
+          "name": "_rewardToken"
+        },
+        {
+          "type": "uint256",
+          "name": "_startTimestamp"
         }
       ],
       "outputs": []
     },
     {
       "type": "function",
-      "name": "allowance",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "owner"
-        },
-        {
-          "type": "address",
-          "name": "spender"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "approve",
+      "name": "addRewardInfo",
       "constant": false,
       "payable": false,
       "inputs": [
         {
-          "type": "address",
-          "name": "spender"
+          "type": "uint256",
+          "name": "_campaignID"
         },
         {
           "type": "uint256",
-          "name": "amount"
+          "name": "_endTimestamp"
+        },
+        {
+          "type": "uint256",
+          "name": "_rewardPerSec"
         }
       ],
-      "outputs": [
-        {
-          "type": "bool"
-        }
-      ]
+      "outputs": []
     },
     {
       "type": "function",
-      "name": "balanceOf",
+      "name": "campaignInfo",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
       "inputs": [
         {
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
           "type": "address",
-          "name": "account"
+          "name": "stakingToken"
+        },
+        {
+          "type": "address",
+          "name": "rewardToken"
+        },
+        {
+          "type": "uint256",
+          "name": "precision"
+        },
+        {
+          "type": "uint256",
+          "name": "startTimestamp"
+        },
+        {
+          "type": "uint256",
+          "name": "lastRewardTimestamp"
+        },
+        {
+          "type": "uint256",
+          "name": "accRewardPerShare"
+        },
+        {
+          "type": "uint256",
+          "name": "totalStaked"
+        },
+        {
+          "type": "uint256",
+          "name": "totalRewards"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "campaignInfoLen",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "campaignRewardInfo",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256"
+        },
+        {
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": "endTimestamp"
+        },
+        {
+          "type": "uint256",
+          "name": "rewardPerSec"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "currentEndTimestamp",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_campaignID"
         }
       ],
       "outputs": [
@@ -254,10 +318,32 @@
     },
     {
       "type": "function",
-      "name": "burn",
+      "name": "currentRewardPerSec",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_campaignID"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "deposit",
       "constant": false,
       "payable": false,
       "inputs": [
+        {
+          "type": "uint256",
+          "name": "_campaignID"
+        },
         {
           "type": "uint256",
           "name": "_amount"
@@ -267,93 +353,21 @@
     },
     {
       "type": "function",
-      "name": "checkpoints",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address"
-        },
-        {
-          "type": "uint32"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint32",
-          "name": "fromBlock"
-        },
-        {
-          "type": "uint256",
-          "name": "votes"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "decimals",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "uint8"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "decreaseAllowance",
+      "name": "depositWithPermit",
       "constant": false,
       "payable": false,
       "inputs": [
         {
-          "type": "address",
-          "name": "spender"
+          "type": "uint256",
+          "name": "_campaignID"
         },
         {
           "type": "uint256",
-          "name": "subtractedValue"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bool"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "delegate",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "delegatee"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "delegateBySig",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "delegatee"
+          "name": "_amount"
         },
         {
           "type": "uint256",
-          "name": "nonce"
-        },
-        {
-          "type": "uint256",
-          "name": "expiry"
+          "name": "deadline"
         },
         {
           "type": "uint8",
@@ -372,148 +386,56 @@
     },
     {
       "type": "function",
-      "name": "delegates",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "delegator"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "address"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "getCurrentVotes",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "account"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "getPriorVotes",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "account"
-        },
-        {
-          "type": "uint256",
-          "name": "blockNumber"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "increaseAllowance",
+      "name": "emergencyRewardWithdraw",
       "constant": false,
       "payable": false,
       "inputs": [
         {
-          "type": "address",
-          "name": "spender"
-        },
-        {
           "type": "uint256",
-          "name": "addedValue"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bool"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "maxSupply",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "mint",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "_to"
+          "name": "_campaignID"
         },
         {
           "type": "uint256",
           "name": "_amount"
+        },
+        {
+          "type": "address",
+          "name": "_beneficiary"
         }
       ],
       "outputs": []
     },
     {
       "type": "function",
-      "name": "minterLength",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "name",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "nonces",
-      "constant": true,
-      "stateMutability": "view",
+      "name": "emergencyWithdraw",
+      "constant": false,
       "payable": false,
       "inputs": [
         {
-          "type": "address"
+          "type": "uint256",
+          "name": "_campaignID"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "getMultiplier",
+      "constant": true,
+      "stateMutability": "pure",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_from"
+        },
+        {
+          "type": "uint256",
+          "name": "_to"
+        },
+        {
+          "type": "uint256",
+          "name": "_endTimestamp"
         }
       ],
       "outputs": [
@@ -524,20 +446,24 @@
     },
     {
       "type": "function",
-      "name": "numCheckpoints",
-      "constant": true,
-      "stateMutability": "view",
+      "name": "harvest",
+      "constant": false,
       "payable": false,
       "inputs": [
         {
-          "type": "address"
+          "type": "uint256[]",
+          "name": "_campaignIDs"
         }
       ],
-      "outputs": [
-        {
-          "type": "uint32"
-        }
-      ]
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "massUpdateCampaigns",
+      "constant": false,
+      "payable": false,
+      "inputs": [],
+      "outputs": []
     },
     {
       "type": "function",
@@ -554,16 +480,25 @@
     },
     {
       "type": "function",
-      "name": "removeMinter",
-      "constant": false,
+      "name": "pendingReward",
+      "constant": true,
+      "stateMutability": "view",
       "payable": false,
       "inputs": [
+        {
+          "type": "uint256",
+          "name": "_campaignID"
+        },
         {
           "type": "address",
           "name": "_user"
         }
       ],
-      "outputs": []
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
     },
     {
       "type": "function",
@@ -575,20 +510,38 @@
     },
     {
       "type": "function",
-      "name": "symbol",
+      "name": "rewardHolder",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
       "inputs": [],
       "outputs": [
         {
-          "type": "string"
+          "type": "address"
         }
       ]
     },
     {
       "type": "function",
-      "name": "totalSupply",
+      "name": "rewardInfoLen",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_campaignID"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "rewardInfoLimit",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
@@ -601,49 +554,29 @@
     },
     {
       "type": "function",
-      "name": "transfer",
+      "name": "setRewardHolder",
       "constant": false,
       "payable": false,
       "inputs": [
         {
           "type": "address",
-          "name": "recipient"
-        },
-        {
-          "type": "uint256",
-          "name": "amount"
+          "name": "_rewardHolder"
         }
       ],
-      "outputs": [
-        {
-          "type": "bool"
-        }
-      ]
+      "outputs": []
     },
     {
       "type": "function",
-      "name": "transferFrom",
+      "name": "setRewardInfoLimit",
       "constant": false,
       "payable": false,
       "inputs": [
         {
-          "type": "address",
-          "name": "sender"
-        },
-        {
-          "type": "address",
-          "name": "recipient"
-        },
-        {
           "type": "uint256",
-          "name": "amount"
+          "name": "_updatedRewardInfoLimit"
         }
       ],
-      "outputs": [
-        {
-          "type": "bool"
-        }
-      ]
+      "outputs": []
     },
     {
       "type": "function",
@@ -654,6 +587,61 @@
         {
           "type": "address",
           "name": "newOwner"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "updateCampaign",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_campaignID"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "userInfo",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256"
+        },
+        {
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": "amount"
+        },
+        {
+          "type": "uint256",
+          "name": "rewardDebt"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "withdraw",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_campaignID"
+        },
+        {
+          "type": "uint256",
+          "name": "_amount"
         }
       ],
       "outputs": []
