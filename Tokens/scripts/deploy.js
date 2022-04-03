@@ -2,7 +2,7 @@ console.log(
   "============================== Start Deploying =============================="
 );
 
-const sleepDuration = 2000;
+const sleepDuration = 10000;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 (async () => {

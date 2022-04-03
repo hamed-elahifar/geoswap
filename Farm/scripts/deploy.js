@@ -1,5 +1,8 @@
 const fs = require("fs");
 
+const sleepDuration = 30000;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 async function main() {
   const [deployer] = await ethers.getSigners();
   console.log("Deployer:", deployer.address);
@@ -8,6 +11,9 @@ async function main() {
   console.log("Deployer balance:", balance.toString());
 
   // =============================== Token ================================================
+
+  await sleep(sleepDuration);
+
   const Token = await ethers.getContractFactory("GeosSwapToken");
   const token = await Token.deploy();
   console.log("Token address:", token.address);
@@ -20,6 +26,8 @@ async function main() {
   fs.writeFileSync("abi/Token.json", JSON.stringify(tokenData, null, 2));
 
   // =============================== Farm ================================================
+
+  await sleep(sleepDuration);
 
   const Farm = await ethers.getContractFactory("GeosFarm");
   const farm = await Farm.deploy(token.address, 1, 0, 10_000_000);
