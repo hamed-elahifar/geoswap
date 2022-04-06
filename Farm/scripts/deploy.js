@@ -12,8 +12,6 @@ async function main() {
 
   // =============================== Token ================================================
 
-  await sleep(sleepDuration);
-
   const Token = await ethers.getContractFactory("GeosSwapToken");
   const token = await Token.deploy();
   console.log("Token address:", token.address);

@@ -11,7 +11,7 @@
   "tokens": [
     {
       "name": "GEO SWAP",
-      "chainId": 1,
+      "chainId": 1287,
       "symbol": "GEOS",
       "decimals": 18,
       "address": "0xc43c9B4D8a35DE82B6e212A3c868160Bfdccf747",
@@ -19,7 +19,7 @@
     },
     {
       "name": "USD Coin",
-      "chainId": 1,
+      "chainId": 1287,
       "symbol": "USDC",
       "decimals": 18,
       "address": "0xbEaF76328EAFa7ce3a34388dBEFdb8940983cB27",
@@ -27,7 +27,7 @@
     },
     {
       "name": "USD Tether",
-      "chainId": 1,
+      "chainId": 1287,
       "symbol": "USDT",
       "decimals": 18,
       "address": "0x7839c49478A2b27636C0E4495862DBB02080Da3E",
@@ -35,7 +35,7 @@
     },
     {
       "name": "Wrapped Ether",
-      "chainId": 1,
+      "chainId": 1287,
       "symbol": "WETH",
       "decimals": 18,
       "address": "0x8d35D2cBbbCE62A68214Fcd17415ebd24AF780Be",
