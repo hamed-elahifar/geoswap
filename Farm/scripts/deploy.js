@@ -37,6 +37,21 @@ async function main() {
   };
 
   fs.writeFileSync("abi/farm.json", JSON.stringify(farmData, null, 2));
+
+  // =============================== Vault ================================================
+
+  await sleep(sleepDuration);
+
+  const Vault = await ethers.getContractFactory("GeosVault");
+  const vault = await Vault.deploy(token.address, 1, 0, 10_000_000);
+  console.log("Vault address:", vault.address);
+
+  const vaultData = {
+    address: vault.address,
+    abi: JSON.parse(vault.interface.format("json")),
+  };
+
+  fs.writeFileSync("abi/vault.json", JSON.stringify(vaultData, null, 2));
 }
 
 main()

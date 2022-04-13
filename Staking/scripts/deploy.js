@@ -23,6 +23,21 @@ async function deploy() {
     "abi/token-farm.json",
     JSON.stringify(tokenFarmData, null, 2)
   );
+
+  // =============================== Locker ================================================
+  const Locker = await ethers.getContractFactory("SolarLocker");
+  const locker = await Locker.deploy();
+  console.log("Locker address:", locker.address);
+
+  const lockerData = {
+    address: locker.address,
+    abi: JSON.parse(locker.interface.format("json")),
+  };
+
+  fs.writeFileSync(
+    "abi/locker.json",
+    JSON.stringify(lockerData, null, 2)
+  );
 }
 
 deploy()

@@ -10,26 +10,32 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./GEOS-Token.sol";
 import "./TransferHelper.sol";
 
-contract GeosFarm is Ownable {
+contract GeosVault is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
+    // using SafeERC20 for WannaSwapToken;
 
+    // Info of each user.
     struct UserInfo {
         uint256 amount;
         uint256 rewardDebt;
-        uint256 totalLp;
+        uint256 lastInteraction;
     }
 
+    // Info of each pool.
     struct PoolInfo {
         IERC20 lpToken;
         uint256 allocPoint;
         uint256 lastRewardBlock;
         uint256 accGeosPerShare;
         uint256 totalLp;
+        uint256 lockupDuration;
     }
 
+    // The CAKE TOKEN!
     GeosSwapToken public geos;
 
+    // Burn Address
     address public constant burnAddress =
         address(0x000000000000000000000000000000000000dEaD);
 
@@ -37,13 +43,17 @@ contract GeosFarm is Ownable {
     uint256 public mintedGeos;
     uint256 public geosPerBlock;
 
+    // Info of each pool.
     PoolInfo[] public poolInfo;
 
+    //
     mapping(address => uint256) poolIndex;
 
+    // Info of each user that stakes LP tokens.
     mapping(uint256 => mapping(address => UserInfo)) public userInfo;
-
+    // Total allocation points. Must be the sum of all allocation points in all pools.
     uint256 public totalAllocPoint = 0;
+    // The block number when CAKE mining starts.
     uint256 public startBlock;
 
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
@@ -94,6 +104,7 @@ contract GeosFarm is Ownable {
     function add(
         uint256 _allocPoint,
         IERC20 _lpToken,
+        uint256 _lockupDuration,
         bool _withUpdate
     ) public onlyOwner {
         require(poolIndex[address(_lpToken)] == 0, "addPool: EXISTED POOL");
@@ -110,29 +121,12 @@ contract GeosFarm is Ownable {
                 allocPoint: _allocPoint,
                 lastRewardBlock: lastRewardBlock,
                 accGeosPerShare: 0,
-                totalLp: 0
+                totalLp: 0,
+                lockupDuration: _lockupDuration
             })
         );
         poolIndex[address(_lpToken)] = poolInfo.length;
         emit AddPool(_allocPoint, address(_lpToken), _withUpdate);
-    }
-
-    function set(
-        uint256 _pid,
-        uint256 _allocPoint,
-        bool _withUpdate
-    ) public onlyOwner {
-        if (_withUpdate) {
-            massUpdatePools();
-        }
-        uint256 prevAllocPoint = poolInfo[_pid].allocPoint;
-        poolInfo[_pid].allocPoint = _allocPoint;
-        if (prevAllocPoint != _allocPoint) {
-            totalAllocPoint = totalAllocPoint.sub(prevAllocPoint).add(
-                _allocPoint
-            );
-        }
-        emit SetPool(_pid, _allocPoint, _withUpdate);
     }
 
     function getBlockCount(uint256 _from, uint256 _to)
@@ -141,6 +135,17 @@ contract GeosFarm is Ownable {
         returns (uint256)
     {
         return _to.sub(_from);
+    }
+
+    function userLockedUntil(uint256 _pid, address _user)
+        public
+        view
+        returns (uint256)
+    {
+        UserInfo storage user = userInfo[_pid][_user];
+        PoolInfo storage pool = poolInfo[_pid];
+
+        return user.lastInteraction + pool.lockupDuration;
     }
 
     function pendingGeos(uint256 _pid, address _user)
@@ -198,6 +203,7 @@ contract GeosFarm is Ownable {
         if (block.number <= pool.lastRewardBlock) {
             return;
         }
+
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
         if (lpSupply == 0) {
             pool.lastRewardBlock = block.number;
@@ -241,9 +247,10 @@ contract GeosFarm is Ownable {
                 _amount
             );
             user.amount = user.amount.add(_amount);
+            pool.totalLp = pool.totalLp.add(_amount);
         }
         user.rewardDebt = user.amount.mul(pool.accGeosPerShare).div(1e12);
-        pool.totalLp = pool.totalLp.add(_amount);
+        user.lastInteraction = block.timestamp;
         emit Deposit(msg.sender, _pid, _amount);
     }
 
@@ -264,20 +271,12 @@ contract GeosFarm is Ownable {
         }
         if (_amount > 0) {
             user.amount = user.amount.sub(_amount);
+            pool.totalLp = pool.totalLp.sub(_amount);
             pool.lpToken.safeTransfer(address(msg.sender), _amount);
         }
         user.rewardDebt = user.amount.mul(pool.accGeosPerShare).div(1e12);
-        pool.totalLp = pool.totalLp.sub(_amount);
+        user.lastInteraction = block.timestamp;
         emit Withdraw(msg.sender, _pid, _amount);
-    }
-
-    function emergencyWithdraw(uint256 _pid) public {
-        PoolInfo storage pool = poolInfo[_pid];
-        UserInfo storage user = userInfo[_pid][msg.sender];
-        pool.lpToken.safeTransfer(address(msg.sender), user.amount);
-        emit EmergencyWithdraw(msg.sender, _pid, user.amount);
-        user.amount = 0;
-        user.rewardDebt = 0;
     }
 
     function safeGeosTransfer(address _to, uint256 _amount) public onlyOwner {
