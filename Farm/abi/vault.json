@@ -1,5 +1,5 @@
 {
-  "address": "0x67b2C8E86e8B32f41340c62c544563dfDD6C2520",
+  "address": "0x975F9d16D9BCde5084a8b078c738b2C986e60Bba",
   "abi": [
     {
       "type": "constructor",
@@ -7,60 +7,40 @@
       "inputs": [
         {
           "type": "address",
-          "name": "_rewardHolder"
+          "name": "_geos"
+        },
+        {
+          "type": "uint256",
+          "name": "_geosPerBlock"
+        },
+        {
+          "type": "uint256",
+          "name": "_startBlock"
+        },
+        {
+          "type": "uint256",
+          "name": "_totalGeos"
         }
       ]
     },
     {
       "type": "event",
       "anonymous": false,
-      "name": "AddCampaignInfo",
+      "name": "AddPool",
       "inputs": [
         {
           "type": "uint256",
-          "name": "campaignID",
-          "indexed": true
-        },
-        {
-          "type": "address",
-          "name": "stakingToken",
+          "name": "allocPoint",
           "indexed": false
         },
         {
           "type": "address",
-          "name": "rewardToken",
+          "name": "lpToken",
           "indexed": false
         },
         {
-          "type": "uint256",
-          "name": "startTimestamp",
-          "indexed": false
-        }
-      ]
-    },
-    {
-      "type": "event",
-      "anonymous": false,
-      "name": "AddRewardInfo",
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "campaignID",
-          "indexed": true
-        },
-        {
-          "type": "uint256",
-          "name": "phase",
-          "indexed": true
-        },
-        {
-          "type": "uint256",
-          "name": "endTimestamp",
-          "indexed": false
-        },
-        {
-          "type": "uint256",
-          "name": "rewardPerTimestamp",
+          "type": "bool",
+          "name": "withUpdate",
           "indexed": false
         }
       ]
@@ -77,12 +57,12 @@
         },
         {
           "type": "uint256",
-          "name": "amount",
-          "indexed": false
+          "name": "pid",
+          "indexed": true
         },
         {
           "type": "uint256",
-          "name": "campaign",
+          "name": "amount",
           "indexed": false
         }
       ]
@@ -99,12 +79,12 @@
         },
         {
           "type": "uint256",
-          "name": "amount",
-          "indexed": false
+          "name": "pid",
+          "indexed": true
         },
         {
           "type": "uint256",
-          "name": "campaign",
+          "name": "amount",
           "indexed": false
         }
       ]
@@ -129,11 +109,11 @@
     {
       "type": "event",
       "anonymous": false,
-      "name": "SetRewardHolder",
+      "name": "SetEmissionRate",
       "inputs": [
         {
-          "type": "address",
-          "name": "rewardHolder",
+          "type": "uint256",
+          "name": "geosPerBlock",
           "indexed": false
         }
       ]
@@ -141,11 +121,33 @@
     {
       "type": "event",
       "anonymous": false,
-      "name": "SetRewardInfoLimit",
+      "name": "SetPool",
       "inputs": [
         {
           "type": "uint256",
-          "name": "rewardInfoLimit",
+          "name": "pid",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "allocPoint",
+          "indexed": false
+        },
+        {
+          "type": "bool",
+          "name": "withUpdate",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "SetTotalGeos",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "totalGeos",
           "indexed": false
         }
       ]
@@ -162,175 +164,70 @@
         },
         {
           "type": "uint256",
+          "name": "pid",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
           "name": "amount",
           "indexed": false
-        },
-        {
-          "type": "uint256",
-          "name": "campaign",
-          "indexed": false
         }
       ]
     },
     {
       "type": "function",
-      "name": "addCampaignInfo",
+      "name": "add",
       "constant": false,
       "payable": false,
       "inputs": [
         {
-          "type": "address",
-          "name": "_stakingToken"
+          "type": "uint256",
+          "name": "_allocPoint"
         },
         {
           "type": "address",
-          "name": "_rewardToken"
+          "name": "_lpToken"
         },
         {
           "type": "uint256",
-          "name": "_startTimestamp"
+          "name": "_lockupDuration"
+        },
+        {
+          "type": "bool",
+          "name": "_withUpdate"
         }
       ],
       "outputs": []
     },
     {
       "type": "function",
-      "name": "addRewardInfo",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "_campaignID"
-        },
-        {
-          "type": "uint256",
-          "name": "_endTimestamp"
-        },
-        {
-          "type": "uint256",
-          "name": "_rewardPerSec"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "campaignInfo",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "address",
-          "name": "stakingToken"
-        },
-        {
-          "type": "address",
-          "name": "rewardToken"
-        },
-        {
-          "type": "uint256",
-          "name": "precision"
-        },
-        {
-          "type": "uint256",
-          "name": "startTimestamp"
-        },
-        {
-          "type": "uint256",
-          "name": "lastRewardTimestamp"
-        },
-        {
-          "type": "uint256",
-          "name": "accRewardPerShare"
-        },
-        {
-          "type": "uint256",
-          "name": "totalStaked"
-        },
-        {
-          "type": "uint256",
-          "name": "totalRewards"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "campaignInfoLen",
+      "name": "burnAddress",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
       "inputs": [],
       "outputs": [
         {
-          "type": "uint256"
+          "type": "address"
         }
       ]
     },
     {
       "type": "function",
-      "name": "campaignRewardInfo",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256"
-        },
-        {
-          "type": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256",
-          "name": "endTimestamp"
-        },
-        {
-          "type": "uint256",
-          "name": "rewardPerSec"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "currentEndTimestamp",
+      "name": "calculate",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
       "inputs": [
         {
           "type": "uint256",
-          "name": "_campaignID"
+          "name": "_reward"
         }
       ],
       "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "currentRewardPerSec",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
         {
           "type": "uint256",
-          "name": "_campaignID"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
+          "name": "farmGeos"
         }
       ]
     },
@@ -342,7 +239,7 @@
       "inputs": [
         {
           "type": "uint256",
-          "name": "_campaignID"
+          "name": "_pid"
         },
         {
           "type": "uint256",
@@ -353,76 +250,35 @@
     },
     {
       "type": "function",
-      "name": "depositWithPermit",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "_campaignID"
-        },
-        {
-          "type": "uint256",
-          "name": "_amount"
-        },
-        {
-          "type": "uint256",
-          "name": "deadline"
-        },
-        {
-          "type": "uint8",
-          "name": "v"
-        },
-        {
-          "type": "bytes32",
-          "name": "r"
-        },
-        {
-          "type": "bytes32",
-          "name": "s"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "emergencyRewardWithdraw",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "_campaignID"
-        },
-        {
-          "type": "uint256",
-          "name": "_amount"
-        },
-        {
-          "type": "address",
-          "name": "_beneficiary"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "emergencyWithdraw",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "_campaignID"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "getMultiplier",
+      "name": "geos",
       "constant": true,
-      "stateMutability": "pure",
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "geosPerBlock",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getBlockCount",
+      "constant": true,
+      "stateMutability": "view",
       "payable": false,
       "inputs": [
         {
@@ -432,10 +288,6 @@
         {
           "type": "uint256",
           "name": "_to"
-        },
-        {
-          "type": "uint256",
-          "name": "_endTimestamp"
         }
       ],
       "outputs": [
@@ -446,24 +298,24 @@
     },
     {
       "type": "function",
-      "name": "harvest",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256[]",
-          "name": "_campaignIDs"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "massUpdateCampaigns",
+      "name": "massUpdatePools",
       "constant": false,
       "payable": false,
       "inputs": [],
       "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "mintedGeos",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
     },
     {
       "type": "function",
@@ -480,20 +332,71 @@
     },
     {
       "type": "function",
-      "name": "pendingReward",
+      "name": "pendingGeos",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
       "inputs": [
         {
           "type": "uint256",
-          "name": "_campaignID"
+          "name": "_pid"
         },
         {
           "type": "address",
           "name": "_user"
         }
       ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "poolInfo",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "address",
+          "name": "lpToken"
+        },
+        {
+          "type": "uint256",
+          "name": "allocPoint"
+        },
+        {
+          "type": "uint256",
+          "name": "lastRewardBlock"
+        },
+        {
+          "type": "uint256",
+          "name": "accGeosPerShare"
+        },
+        {
+          "type": "uint256",
+          "name": "totalLp"
+        },
+        {
+          "type": "uint256",
+          "name": "lockupDuration"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "poolLength",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
       "outputs": [
         {
           "type": "uint256"
@@ -510,73 +413,85 @@
     },
     {
       "type": "function",
-      "name": "rewardHolder",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "address"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "rewardInfoLen",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "_campaignID"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "rewardInfoLimit",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "setRewardHolder",
+      "name": "safeGeosTransfer",
       "constant": false,
       "payable": false,
       "inputs": [
         {
           "type": "address",
-          "name": "_rewardHolder"
+          "name": "_to"
+        },
+        {
+          "type": "uint256",
+          "name": "_amount"
         }
       ],
       "outputs": []
     },
     {
       "type": "function",
-      "name": "setRewardInfoLimit",
+      "name": "setEmissionRate",
       "constant": false,
       "payable": false,
       "inputs": [
         {
           "type": "uint256",
-          "name": "_updatedRewardInfoLimit"
+          "name": "_geosPerBlock"
         }
       ],
       "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setTotalGeos",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_totalGeos"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "startBlock",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "totalAllocPoint",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "totalGeos",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
     },
     {
       "type": "function",
@@ -593,13 +508,13 @@
     },
     {
       "type": "function",
-      "name": "updateCampaign",
+      "name": "updatePool",
       "constant": false,
       "payable": false,
       "inputs": [
         {
           "type": "uint256",
-          "name": "_campaignID"
+          "name": "_pid"
         }
       ],
       "outputs": []
@@ -626,6 +541,32 @@
         {
           "type": "uint256",
           "name": "rewardDebt"
+        },
+        {
+          "type": "uint256",
+          "name": "lastInteraction"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "userLockedUntil",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_pid"
+        },
+        {
+          "type": "address",
+          "name": "_user"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
         }
       ]
     },
@@ -637,7 +578,7 @@
       "inputs": [
         {
           "type": "uint256",
-          "name": "_campaignID"
+          "name": "_pid"
         },
         {
           "type": "uint256",

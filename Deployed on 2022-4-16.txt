@@ -1,0 +1,53 @@
+ ++++++++++ Deploying Tokens...
+
+> geoswap@1.0.0 moonbeam
+> npx hardhat run --network moonbeam scripts/deploy.js
+
+You are using a version of Node.js that is not supported by Hardhat, and it may work incorrectly, or not work at all.
+
+Please, make sure you are using a supported version of Node.js.
+
+To learn more about which versions of Node.js are supported go to https://hardhat.org/nodejs-versions
+============================== Start Deploying ==============================
+Deployer: 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+Deployer balance: 4516525365000000000
+USDC Token address: 0xe8D7ED461003D36692fc481eF8F22e47F615c022
+
+Deployer: 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+Deployer balance: 4516525365000000000
+USDT Token address: 0x9AF54298051BfF859c7A101056C04E5485D93B70
+
+ ++++++++++ Deploying Factory...
+
+> moonbeam
+> npx hardhat run --network moonbeam scripts/deploy.js
+
+Deploying contracts using 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+WETH deployed to : 0x346044fFE77BBece1a845ec975B51af01f5c3241
+Factory deployed to : 0x491c445c8Fcbe6B276E0a9DC78c779C8c0296231
+Router V02 deployed to :  0xF30A732474f17f1932E3C93eEe0c88E84157Ef0f
+Multicall v2 address: 0xEeA772490773E00C60E1E1C2dB77854F4B0f36C1
+ ++++++++++ Deploying Farm...
+
+> moonbeam
+> npx hardhat run --network moonbeam scripts/deploy.js
+
+You are using a version of Node.js that is not supported by Hardhat, and it may work incorrectly, or not work at all.
+
+Please, make sure you are using a supported version of Node.js.
+
+To learn more about which versions of Node.js are supported go to https://hardhat.org/nodejs-versions
+Deployer: 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+Deployer balance: 4499659349000000000
+Token address: 0x0B80CDd58Be2393B10c571aC8bb73C8F971F5620
+Farm address: 0xbE193ae48b0Fbf73299F02da4e9Ff9Ff2B442728
+Vault address: 0x975F9d16D9BCde5084a8b078c738b2C986e60Bba
+ ++++++++++ Deploying Staking...
+
+> moonbeam
+> npx hardhat run --network moonbeam scripts/deploy.js
+
+Deploying contracts using 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+FARM_REWARD_HOLDER 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+Token Farm address: 0x67b2C8E86e8B32f41340c62c544563dfDD6C2520
+Locker address: 0x3a73616C2358a82dA4f7521bB17Ce9B1A8D76398

@@ -1,5 +1,5 @@
 {
-  "address": "0xF9C535B7c4b10DD2bedf2C9fF5e4E87EEC74D205",
+  "address": "0xbE193ae48b0Fbf73299F02da4e9Ff9Ff2B442728",
   "abi": [
     {
       "type": "constructor",
@@ -315,32 +315,6 @@
     },
     {
       "type": "function",
-      "name": "migrate",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "_pid"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "migrator",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "address"
-        }
-      ]
-    },
-    {
-      "type": "function",
       "name": "mintedGeos",
       "constant": true,
       "stateMutability": "view",
@@ -414,6 +388,10 @@
         {
           "type": "uint256",
           "name": "accGeosPerShare"
+        },
+        {
+          "type": "uint256",
+          "name": "totalLp"
         }
       ]
     },
@@ -485,19 +463,6 @@
         {
           "type": "uint256",
           "name": "_geosPerBlock"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "setMigrator",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": "_migrator"
         }
       ],
       "outputs": []
@@ -602,6 +567,10 @@
         {
           "type": "uint256",
           "name": "rewardDebt"
+        },
+        {
+          "type": "uint256",
+          "name": "totalLp"
         }
       ]
     },

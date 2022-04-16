@@ -23,7 +23,7 @@ module.exports = {
     //   chainId: 1281,
     // },
     ganache: {
-      url: "http://127.0.0.1:7545",
+      url: "http://127.0.0.1:8545",
       accounts: [process.env.PRIVATE_KEY],
       network_id: "5777",
       chainId: 1337,
