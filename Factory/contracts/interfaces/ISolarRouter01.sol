@@ -1,6 +1,7 @@
-pragma solidity >=0.6.2;
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity =0.6.12;
 
-interface IUniswapV2Router01 {
+interface ISolarRouter01 {
     function factory() external pure returns (address);
     function WETH() external pure returns (address);
 

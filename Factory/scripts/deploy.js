@@ -21,7 +21,7 @@ async function deploy() {
   fs.writeFileSync("abi/WETH.json", JSON.stringify(wethData, null, 2));
 
   // Deploy Factory
-  const factory = await ethers.getContractFactory("UniswapV2Factory");
+  const factory = await ethers.getContractFactory("SolarFactory");
   const factoryInstance = await factory.deploy(deployerAddress);
   await factoryInstance.deployed();
 
@@ -35,7 +35,7 @@ async function deploy() {
   fs.writeFileSync("abi/factory.json", JSON.stringify(factoryData, null, 2));
 
   // Deploy Router passing Factory Address and WETH Address
-  const router = await ethers.getContractFactory("UniswapV2Router02");
+  const router = await ethers.getContractFactory("SolarRouter02");
   const routerInstance = await router.deploy(
     factoryInstance.address,
     wethInstance.address

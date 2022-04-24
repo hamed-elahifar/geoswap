@@ -1,5 +1,5 @@
 {
-  "address": "0x491c445c8Fcbe6B276E0a9DC78c779C8c0296231",
+  "address": "0xAC724614E58039B59EbFA569EeBee0336691416B",
   "abi": [
     {
       "type": "constructor",
@@ -34,6 +34,19 @@
         {
           "type": "uint256",
           "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "INIT_CODE_PAIR_HASH",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "bytes32"
         }
       ]
     },
@@ -137,6 +150,19 @@
     },
     {
       "type": "function",
+      "name": "migrator",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "function",
       "name": "setFeeTo",
       "constant": false,
       "payable": false,
@@ -157,6 +183,19 @@
         {
           "type": "address",
           "name": "_feeToSetter"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setMigrator",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_migrator"
         }
       ],
       "outputs": []
