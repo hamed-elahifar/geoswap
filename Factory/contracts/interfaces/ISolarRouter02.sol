@@ -25,7 +25,7 @@ interface ISolarRouter02 is ISolarRouter01 {
         bytes32 r,
         bytes32 s
     ) external returns (uint256 amountETH);
-
+    /*
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -48,4 +48,5 @@ interface ISolarRouter02 is ISolarRouter01 {
         address to,
         uint256 deadline
     ) external;
+    */
 }

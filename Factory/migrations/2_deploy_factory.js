@@ -4,6 +4,8 @@ const TokenB = artifacts.require("TokenB");
 const WETH = artifacts.require("WETH");
 const SolarRouter02 = artifacts.require("SolarRouter02");
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 module.exports = async function (deployer, network, [owner1]) {
   await deployer.deploy(Factory, owner1);
   const factory = await Factory.deployed();
@@ -17,6 +19,10 @@ module.exports = async function (deployer, network, [owner1]) {
   await deployer.deploy(WETH);
   const weth = await WETH.deployed();
 
-  await deployer.deploy(SolarRouter02, factory.address, weth.address);
+  await sleep(1000);
+
+  await deployer.deploy(SolarRouter02, factory.address, weth.address, {
+    gas: 1_000_000_000,
+  });
   const router = await SolarRouter02.deployed();
 };
