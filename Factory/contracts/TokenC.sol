@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.6.12;
 
-contract TokenB {
-    string public name = "Token B";
-    string public symbol = "TKB";
+contract TokenC {
+    string public name = "Token C";
+    string public symbol = "TKC";
     uint8 public decimals = 18;
 
     event Approval(address indexed src, address indexed guy, uint256 wad);

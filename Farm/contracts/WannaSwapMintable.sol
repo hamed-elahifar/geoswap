@@ -13,11 +13,11 @@ contract WannaSwapMintable is Context, Ownable {
     event RemoveMinter(address indexed user);
 
     constructor () internal {
-        address msgSender = _msgSender();
+        // address msgSender = _msgSender();
     }
 
     modifier onlyMinter() {
-        require(_minters[_msgSender()], "WannaSwapMintable: MUST BE MINTER");
+        require(_minters[_msgSender()], "GEOSSwapMintable: MUST BE MINTER");
         _;
     }
 

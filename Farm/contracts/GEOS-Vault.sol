@@ -131,7 +131,7 @@ contract GeosVault is Ownable {
 
     function getBlockCount(uint256 _from, uint256 _to)
         public
-        view
+        pure
         returns (uint256)
     {
         return _to.sub(_from);

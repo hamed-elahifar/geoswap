@@ -1,0 +1,96 @@
+const { expect } = require("chai");
+const BigNumber = require("bignumber.js");
+
+describe("Token contract", () => {
+  let Token, token, owner, addr1, addr2;
+
+  const maxSupply = 100_000_000_000_000_000_000_000_000n;
+  const initialSupply = 10_000_000_000_000_000_000_000_000n;
+
+  beforeEach(async () => {
+    // "ethers" inject automatically by hardhat
+    Token = await ethers.getContractFactory("GeosSwapToken");
+    token = await Token.deploy();
+    [owner, addr1, addr2, _] = await ethers.getSigners();
+  });
+
+  describe("Deployment", () => {
+    it("should set the right owner", async () => {
+      expect(await token.owner()).to.equal(owner.address);
+    });
+
+    it("should assing the total supply of tokens to the owner", async () => {
+      const ownerBalance = await token.balanceOf(owner.address);
+
+      // console.log("ownerBalance", ownerBalance);
+
+      expect(await token.totalSupply()).to.equal(ownerBalance);
+    });
+
+    it("should return name", async () => {
+      const name = await token.name();
+      expect(name).to.equal("GeosSwapToken");
+    });
+
+    it("should return symbol", async () => {
+      const symbol = await token.symbol();
+      expect(symbol).to.equal("GEOS");
+    });
+
+    it("should return max maxSupply", async () => {
+      const fetchedMaxSupply = await token.maxSupply();
+      expect(fetchedMaxSupply).to.equal(maxSupply);
+    });
+
+    it("should return totalSupply", async () => {
+      const fetchedTotalSupply = await token.totalSupply();
+      expect(fetchedTotalSupply).to.equal(initialSupply);
+    });
+
+    it("should return owner balance", async () => {
+      const ownerBalance = await token.balanceOf(owner.address);
+      expect(ownerBalance).to.equal(initialSupply);
+    });
+  });
+
+  describe("Tranactions", () => {
+    it("should trasfer 100 token to addr1", async () => {
+      const initialOwnerBalance = BigInt(await token.balanceOf(owner.address));
+      await token.transfer(addr1.address, 100);
+      const addr1Balance = await token.balanceOf(addr1.address);
+      expect(addr1Balance).to.equal(100);
+      const ownerBalance = BigInt(await token.balanceOf(owner.address));
+      expect(initialOwnerBalance - 100n).to.equal(ownerBalance);
+    });
+
+    it("should mint 100 token to addr1", async () => {
+      // add owner to minter
+      await token.addMinter(owner.address);
+      // now owner is a minter so we can mint to addr1
+      await token.mint(addr1.address, 100);
+      expect(await token.balanceOf(addr1.address)).to.equal(100);
+    });
+
+    it("should transfer tokens between accounts", async () => {
+      await token.transfer(addr1.address, 50);
+      const addr1Balance = await token.balanceOf(addr1.address);
+      expect(addr1Balance).to.equal(50);
+
+      await token.connect(addr1).transfer(addr2.address, 50);
+      const addr2Balance = await token.balanceOf(addr2.address);
+      expect(addr2Balance).to.equal(50);
+    });
+
+    it("should fail if sender doesn't have enough tokens", async () => {
+      const initialOwnerBalance = await token.balanceOf(owner.address);
+
+      await expect(
+        token.connect(addr1).transfer(owner.address, 1)
+      ).to.be.revertedWith("ERC20: transfer amount exceeds balance");
+
+      expect(await token.balanceOf(owner.address)).to.equal(
+        initialOwnerBalance
+      );
+    });
+  });
+});
