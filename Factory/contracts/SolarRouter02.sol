@@ -9,9 +9,7 @@ import "./interfaces/ISolarFactory.sol";
 import "./interfaces/IERC20.sol";
 import "./interfaces/IWETH.sol";
 
-// import "truffle/Console.sol";
-
-contract SolarRouter02 is ISolarRouter02 {
+contract Router02 is ISolarRouter02 {
     using SafeMathSolar for uint256;
 
     address public immutable override factory;
@@ -535,6 +533,7 @@ contract SolarRouter02 is ISolarRouter02 {
         if (msg.value > amounts[0])
             TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]);
     }
+
     /*
     // **** SWAP (supporting fee-on-transfer tokens) ****
     // requires the initial amount to have already been sent to the first pair

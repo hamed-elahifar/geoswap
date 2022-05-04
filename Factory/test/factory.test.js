@@ -3,15 +3,15 @@ const { BigNumber } = require("ethers");
 const { assert } = require("chai");
 
 const Factory = artifacts.require("SolarFactory");
+const Router02 = artifacts.require("Router02");
 const TokenA = artifacts.require("TokenA");
 const TokenB = artifacts.require("TokenB");
 const TokenC = artifacts.require("TokenC");
-const SolarRouter02 = artifacts.require("SolarRouter02");
 const WETH = artifacts.require("WETH");
 
 require("chai").use(require("chai-as-promised")).should();
 
-contract("Factory", ([owner1, owner2]) => {
+contract("Factory && Router", ([owner1, owner2]) => {
   let factory,
     tokenA,
     tokenB,
@@ -19,7 +19,7 @@ contract("Factory", ([owner1, owner2]) => {
     tokenAAddress,
     tokenBAddress,
     tokenCAddress,
-    solarRouter02,
+    router02,
     weth;
 
   before(async () => {
@@ -28,14 +28,15 @@ contract("Factory", ([owner1, owner2]) => {
     tokenB = await TokenB.new();
     tokenC = await TokenC.new();
     weth = await WETH.new();
-    solarRouter02 = await SolarRouter02.new(
-      await factory.address,
-      await weth.address
-    );
+    router02 = await Router02.new(await factory.address, await weth.address);
 
     tokenAAddress = await tokenA.address;
     tokenBAddress = await tokenB.address;
     tokenCAddress = await tokenC.address;
+
+    console.log("tokenAAddress", tokenAAddress);
+    console.log("tokenBAddress", tokenBAddress);
+    console.log("tokenCAddress", tokenCAddress);
   });
 
   describe("deployment", () => {
@@ -48,7 +49,7 @@ contract("Factory", ([owner1, owner2]) => {
     });
 
     it("deploys Router successfully", async () => {
-      const solarRouter02Address = await solarRouter02.address;
+      const solarRouter02Address = await router02.address;
       assert.notEqual(solarRouter02Address, 0x0);
       assert.notEqual(solarRouter02Address, "");
       assert.notEqual(solarRouter02Address, null);
@@ -60,10 +61,22 @@ contract("Factory", ([owner1, owner2]) => {
       assert.equal(allPairsLength, 0);
     });
 
-    it("createPair should create a new pair", async () => {
+    it("createPair should create a new pair A,B", async () => {
       await factory.createPair(tokenAAddress, tokenBAddress);
       const allPairsLength = await factory.allPairsLength();
       assert.equal(allPairsLength, 1);
+
+      const pair = await factory.allPairs(0);
+      console.log("A,B => pair(0)", pair);
+    });
+
+    it("createPair should create a new pair A,C", async () => {
+      await factory.createPair(tokenAAddress, tokenCAddress);
+      const allPairsLength = await factory.allPairsLength();
+      assert.equal(allPairsLength, 2);
+
+      const pair = await factory.allPairs(1);
+      console.log("A,C => pair(1)", pair);
     });
 
     it("should set fee to owner2", async () => {
@@ -85,32 +98,72 @@ contract("Factory", ([owner1, owner2]) => {
     });
 
     it("should add addLiquidity", async () => {
-      // const amoutA = await tokenA.balanceOf(owner1);
+      const amoutA = await tokenA.balanceOf(owner1);
       // const amoutB = await tokenB.balanceOf(owner1);
+      // const amoutC = await tokenB.balanceOf(owner1);
 
-      const amout = 1000000000000000;
+      // console.log("amoutC", amoutC.toString());
 
-      await tokenA.approve(solarRouter02.address, amout);
-      await tokenB.approve(solarRouter02.address, amout);
+      await factory.createPair(tokenBAddress, tokenCAddress);
 
-      const allowanceA = await tokenA.allowance(owner1, solarRouter02.address);
-      const allowanceB = await tokenB.allowance(owner1, solarRouter02.address);
+      const amout = amoutA;
 
-      assert.equal(allowanceA, amout);
-      assert.equal(allowanceB, amout);
+      await tokenA.approve(router02.address, amout);
+      await tokenB.approve(router02.address, amout);
+      await tokenC.approve(router02.address, amout);
 
-      await solarRouter02.addLiquidity(
-        tokenAAddress,
+      const allowanceA = await tokenA.allowance(owner1, router02.address);
+      const allowanceB = await tokenB.allowance(owner1, router02.address);
+      const allowanceC = await tokenC.allowance(owner1, router02.address);
+
+      assert.equal(allowanceA.toString(), amout.toString());
+      assert.equal(allowanceB.toString(), amout.toString());
+      assert.equal(allowanceC.toString(), amout.toString());
+
+      await router02.addLiquidity(
         tokenBAddress,
-        BigNumber.from(100000),
-        BigNumber.from(100000),
-        0,
-        0,
+        tokenCAddress,
+        100,
+        100,
+        1,
+        1,
         owner1,
-        "100000000000".toString("hex")
+        Math.floor(Date.now() / 1000) + 60 * 10
       );
-      // const allPairsLength = await factory.allPairsLength();
-      // assert.equal(allPairsLength, 1);
     });
   });
 });
+
+// 
+// THIS IS FRONTEND CODE
+// 
+// if (currencyA.isNative || currencyB.isNative) {
+//   const tokenBIsETH = currencyB.isNative;
+//   estimate = routerContract.estimateGas.addLiquidityETH;
+//   method = routerContract.addLiquidityETH;
+//   args = [
+//     (tokenBIsETH ? currencyA : currencyB)?.wrapped?.address ?? "", // token
+//     (tokenBIsETH ? parsedAmountA : parsedAmountB).quotient.toString(), // token desired
+//     amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
+//     amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+//     account,
+//     deadline.toHexString(),
+//   ];
+//   value = BigNumber.from(
+//     (tokenBIsETH ? parsedAmountB : parsedAmountA).quotient.toString()
+//   );
+// } else {
+//   estimate = routerContract.estimateGas.addLiquidity;
+//   method = routerContract.addLiquidity;
+//   args = [
+//     currencyA?.wrapped?.address ?? "",
+//     currencyB?.wrapped?.address ?? "",
+//     parsedAmountA.quotient.toString(),
+//     parsedAmountB.quotient.toString(),
+//     amountsMin[Field.CURRENCY_A].toString(),
+//     amountsMin[Field.CURRENCY_B].toString(),
+//     account,
+//     deadline.toHexString(),
+//   ];
+//   value = null;
+// }

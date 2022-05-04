@@ -10,6 +10,8 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./GEOS-Token.sol";
 import "./TransferHelper.sol";
 
+import "hardhat/console.sol";
+
 contract GeosFarm is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
@@ -67,8 +69,11 @@ contract GeosFarm is Ownable {
         require(_totalGeos <= _geos.maxSupply(), "BAD TOTALAMOUNT");
         geos = _geos;
         geosPerBlock = _geosPerBlock;
-        startBlock = _startBlock;
+        // startBlock = _startBlock;
+        startBlock = block.number;
         totalGeos = _totalGeos;
+
+        // console.log("totalGeos is %s", totalGeos);
     }
 
     function setEmissionRate(uint256 _geosPerBlock) external onlyOwner {

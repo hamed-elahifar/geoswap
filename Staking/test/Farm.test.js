@@ -1,10 +1,7 @@
 const { expect } = require("chai");
 
 describe("Token contract", () => {
-  let Token, token, Farm, farm, owner, addr1, addr2;
-
-  const maxSupply = 100_000_000_000_000_000_000_000_000n;
-  const initialSupply = 10_000_000_000_000_000_000_000_000n;
+  let TokenFarm, tokenFarm, owner, addr1, addr2;
 
   beforeEach(async () => {
     // "ethers" inject automatically by hardhat
@@ -12,7 +9,8 @@ describe("Token contract", () => {
     token = await Token.deploy();
 
     Farm = await ethers.getContractFactory("GeosFarm");
-    farm = await Farm.deploy(token.address, 10, 10, 0);
+    farm = await Farm.deploy(token.address, 10, 10, 10);
+
     [owner, addr1, addr2, _] = await ethers.getSigners();
   });
 
@@ -40,38 +38,11 @@ describe("Token contract", () => {
       console.log("geos", geos);
       console.log("token", token.address);
 
-      // const userInfo = await farm.userInfo.call(0);
+      // const userInfo = await farm.userInfo.call();
       // console.log("userInfo", userInfo);
-    });
 
-    it("should setEmissionRate", async () => {
-      await farm.setEmissionRate(20);
-
-      const geosPerBlock = await farm.geosPerBlock.call();
-      expect(geosPerBlock).to.equal(20n);
-    });
-
-    it("should setTotalGeos", async () => {
-      await farm.setTotalGeos(20);
-
-      const totalGeos = await farm.totalGeos.call();
-      expect(totalGeos).to.equal(20n);
-    });
-
-    it("should add pool", async () => {
-      await farm.add(10, token.address, true);
-
-      const poolLength = await farm.poolLength();
-      expect(poolLength).to.equal(1n);
-
-      const poolInfo = await farm.poolInfo(0);
-      console.log("poolInfo", poolInfo);
-    });
-
-    it("should calculate", async () => {
-      const calculate = await farm.calculate(1000);
-
-      console.log("calculate", calculate.toString());
+      // const poolInfo = await farm.poolInfo.call();
+      // console.log("poolInfo", poolInfo);
     });
   });
 

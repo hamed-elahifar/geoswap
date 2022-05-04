@@ -10,7 +10,7 @@ module.exports = {
   solidity: "0.6.12",
   networks: {
     ganache: {
-      url: "http://127.0.0.1:8545",
+      url: "HTTP://127.0.0.1:8545",
       accounts: [process.env.PRIVATE_KEY],
     },
     moonbeam: {
