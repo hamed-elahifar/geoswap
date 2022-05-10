@@ -1,5 +1,5 @@
 {
-  "address": "0x664e2E73564Fad27A0050CB9ab23eAA48D0aCd0a",
+  "address": "0x410B42665AFe693dD6FE3CdCd3CC795065Df30E9",
   "abi": [
     {
       "type": "constructor",
@@ -633,32 +633,6 @@
     },
     {
       "type": "function",
-      "name": "swapExactETHForTokensSupportingFeeOnTransferTokens",
-      "constant": false,
-      "stateMutability": "payable",
-      "payable": true,
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "amountOutMin"
-        },
-        {
-          "type": "address[]",
-          "name": "path"
-        },
-        {
-          "type": "address",
-          "name": "to"
-        },
-        {
-          "type": "uint256",
-          "name": "deadline"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
       "name": "swapExactTokensForETH",
       "constant": false,
       "payable": false,
@@ -693,35 +667,6 @@
     },
     {
       "type": "function",
-      "name": "swapExactTokensForETHSupportingFeeOnTransferTokens",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "amountIn"
-        },
-        {
-          "type": "uint256",
-          "name": "amountOutMin"
-        },
-        {
-          "type": "address[]",
-          "name": "path"
-        },
-        {
-          "type": "address",
-          "name": "to"
-        },
-        {
-          "type": "uint256",
-          "name": "deadline"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
       "name": "swapExactTokensForTokens",
       "constant": false,
       "payable": false,
@@ -753,35 +698,6 @@
           "name": "amounts"
         }
       ]
-    },
-    {
-      "type": "function",
-      "name": "swapExactTokensForTokensSupportingFeeOnTransferTokens",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "amountIn"
-        },
-        {
-          "type": "uint256",
-          "name": "amountOutMin"
-        },
-        {
-          "type": "address[]",
-          "name": "path"
-        },
-        {
-          "type": "address",
-          "name": "to"
-        },
-        {
-          "type": "uint256",
-          "name": "deadline"
-        }
-      ],
-      "outputs": []
     },
     {
       "type": "function",

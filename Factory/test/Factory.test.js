@@ -2,8 +2,6 @@ const { expect } = require("chai");
 
 const { assert } = require("chai");
 
-const ERC20ABI = require("../abis/SolarERC20.json");
-
 describe("Token contract", () => {
   let Factory, Router02, TokenA, TokenB, TokenC, WETH;
   let factory, router02, tokenA, tokenB, tokenC, weth;
