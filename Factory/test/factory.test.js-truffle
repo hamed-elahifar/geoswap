@@ -9,7 +9,7 @@ const TokenB = artifacts.require("TokenB");
 const TokenC = artifacts.require("TokenC");
 const WETH = artifacts.require("WETH");
 
-require("chai").use(require("chai-as-promised")).should();
+require("chai").use(require("chai-as-promi Fsed")).should();
 
 contract("Factory && Router", ([owner1, owner2]) => {
   let factory,
@@ -100,7 +100,7 @@ contract("Factory && Router", ([owner1, owner2]) => {
     it("should add addLiquidity", async () => {
       const amoutA = await tokenA.balanceOf(owner1);
       // const amoutB = await tokenB.balanceOf(owner1);
-      // const amoutC = await tokenB.balanceOf(owner1);
+      // const amoutC = await tokenC.balanceOf(owner1);
 
       // console.log("amoutC", amoutC.toString());
 

@@ -15,6 +15,7 @@
     "compile": "npx hardhat compile",
     "moonbeam": "npx hardhat run --network moonbeam scripts/deploy.js",
     "ganache": "npx hardhat run --network ganache scripts/deploy.js",
-    "test": "truffle test"
+    "test": "npx hardhat test"
+
   }
 }
