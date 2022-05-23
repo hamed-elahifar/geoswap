@@ -535,7 +535,6 @@ contract Router02 is ISolarRouter02 {
         if (msg.value > amounts[0])
             TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]);
     }
-
     /*
     // **** SWAP (supporting fee-on-transfer tokens) ****
     // requires the initial amount to have already been sent to the first pair

@@ -5,6 +5,7 @@ const { assert } = require("chai");
 describe("Token contract", () => {
   let Factory, Router02, TokenA, TokenB, TokenC, WETH;
   let factory, router02, tokenA, tokenB, tokenC, weth;
+  let LiquidityValueCalculator, liquidityValueCalculator;
 
   before(async () => {
     // "ethers" inject automatically by hardhat
@@ -27,6 +28,14 @@ describe("Token contract", () => {
 
     Router02 = await ethers.getContractFactory("Router02");
     router02 = await Router02.deploy(factory.address, weth.address);
+
+    LiquidityValueCalculator = await ethers.getContractFactory(
+      "LiquidityValueCalculator"
+    );
+    liquidityValueCalculator = await LiquidityValueCalculator.deploy(
+      factory.address
+    );
+    // console.log("liquidityValueCalculator", liquidityValueCalculator.address);
   });
 
   describe("Deployment", () => {
@@ -60,13 +69,13 @@ describe("Token contract", () => {
       console.log("A,B => pair(0)", pair);
     });
 
-    it("createPair should create a new pair A,C", async () => {
-      await factory.createPair(tokenA.address, tokenC.address);
+    it("createPair should create a new pair B,C", async () => {
+      await factory.createPair(tokenB.address, tokenC.address);
       const allPairsLength = await factory.allPairsLength();
       assert.equal(allPairsLength, 2);
 
       const pair = await factory.allPairs(1);
-      console.log("A,C => pair(0)", pair);
+      console.log("B,C => pair(0)", pair);
     });
 
     it("should set fee to owner2", async () => {
@@ -92,22 +101,14 @@ describe("Token contract", () => {
       assert.equal(setFeeToSetter, owner1.address);
     });
 
-    it("should add addLiquidity", async () => {
-      const amoutA = await tokenA.balanceOf(owner1.address);
-      const amoutB = await tokenB.balanceOf(owner1.address);
-      const amoutC = await tokenC.balanceOf(owner1.address);
+    it("should approve and give allowance", async () => {
+      const amountA = await tokenA.balanceOf(owner1.address);
+      const amountB = await tokenB.balanceOf(owner1.address);
+      const amountC = await tokenC.balanceOf(owner1.address);
 
-      console.log("amoutA", amoutA.toString());
-      console.log("amoutB", amoutB.toString());
-      console.log("amoutC", amoutC.toString());
-
-      await factory.createPair(tokenB.address, tokenC.address);
-
-      const amout = amoutA;
-
-      await tokenA.approve(router02.address, amout);
-      await tokenB.approve(router02.address, amout);
-      await tokenC.approve(router02.address, amout);
+      await tokenA.approve(router02.address, amountA);
+      await tokenB.approve(router02.address, amountB);
+      await tokenC.approve(router02.address, amountC);
 
       const allowanceA = await tokenA.allowance(
         owner1.address,
@@ -122,60 +123,193 @@ describe("Token contract", () => {
         router02.address
       );
 
-      assert.equal(allowanceA.toString(), amout.toString());
-      assert.equal(allowanceB.toString(), amout.toString());
-      assert.equal(allowanceC.toString(), amout.toString());
+      assert.equal(allowanceA.toString(), amountA.toString());
+      assert.equal(allowanceB.toString(), amountB.toString());
+      assert.equal(allowanceC.toString(), amountC.toString());
+    });
 
-      // await factory.setMigrator(owner1.address);
-      // const migrator = await factory.migrator();
+    it("should add Liquidity to A-B Pair", async () => {
+      const amountA = await tokenA.balanceOf(owner1.address);
+      const amountB = await tokenB.balanceOf(owner1.address);
 
       await router02.addLiquidity(
         tokenA.address,
         tokenB.address,
-        1000000,
-        1000000,
+        100_000,
+        100_000,
         100,
         100,
         owner1.address,
         Math.floor(Date.now() / 1000) + 60 * 10
       );
+
+      const amountAA = await tokenA.balanceOf(owner1.address);
+      const amountBB = await tokenB.balanceOf(owner1.address);
+
+      assert.equal(amountA, amountAA - 1000000);
+      assert.equal(amountB, amountBB - 1000000);
+
+      // console.log("amoutAA", amoutAA.toString());
+      // console.log("amoutBB", amoutBB.toString());
     });
 
-    it("should add addLiquidity", async () => {
-      const amoutA = await tokenA.balanceOf(owner1.address);
-      const amoutB = await tokenB.balanceOf(owner1.address);
-      const amoutC = await tokenC.balanceOf(owner1.address);
+    it("should add Liquidity to B-C Pair", async () => {
+      const amountB = await tokenB.balanceOf(owner1.address);
+      const amountC = await tokenC.balanceOf(owner1.address);
 
-      console.log("amoutA", amoutA.toString());
-      console.log("amoutB", amoutB.toString());
-      console.log("amoutC", amoutC.toString());
-
-      const allPairsLength = await factory.allPairsLength();
-      console.log("allPairsLength", allPairsLength.toString());
-
-      const pair3Address = await factory.allPairs(2);
-      console.log("Pair-3", pair3Address);
-
-      // const pair3 = new ethers.Contract(pair3Address, ERC20ABI, owner1);
-      // LpBalance = await pair3.balanceOf(owner1.address);
-
-      // console.log("LpBalance", LpBalance.toString());
-    });
-
-    it("should swap 500000 from A to B", async () => {
-      await router02.swapExactTokensForTokens(
-        tokenA.address,
+      await router02.addLiquidity(
         tokenB.address,
-        500000
+        tokenC.address,
+        50_000,
+        50_000,
+        100,
+        100,
+        owner1.address,
+        Math.floor(Date.now() / 1000) + 60 * 10
       );
 
-      const amoutA = await tokenA.balanceOf(owner1.address);
-      const amoutB = await tokenB.balanceOf(owner1.address);
-      const amoutC = await tokenC.balanceOf(owner1.address);
+      const amountBB = await tokenB.balanceOf(owner1.address);
+      const amountCC = await tokenC.balanceOf(owner1.address);
 
-      console.log("amoutA", amoutA.toString());
-      console.log("amoutB", amoutB.toString());
-      console.log("amoutC", amoutC.toString());
+      assert.equal(amountB, amountBB - 1000000);
+      assert.equal(amountC, amountCC - 1000000);
+    });
+
+    it("some check after add addLiquidity", async () => {
+      const pairInfoAB = await liquidityValueCalculator.pairInfo(
+        tokenA.address,
+        tokenB.address
+      );
+      console.log("reserveA", pairInfoAB[0].toString());
+      console.log("reserveB", pairInfoAB[1].toString());
+      console.log("totalSupply", pairInfoAB[2].toString());
+
+      console.log();
+
+      const pairInfoBC = await liquidityValueCalculator.pairInfo(
+        tokenB.address,
+        tokenC.address
+      );
+      console.log("reserveB", pairInfoBC[0].toString());
+      console.log("reserveC", pairInfoBC[1].toString());
+      console.log("totalSupply", pairInfoBC[2].toString());
+    });
+
+    it("should getPair", async () => {
+      const pair = await factory.getPair(tokenA.address, tokenB.address);
+      // console.log("pair", pair);
+    });
+
+    it("should swap from A to B && B to C", async () => {
+      const amountA = await tokenA.balanceOf(owner1.address);
+      const amountB = await tokenB.balanceOf(owner1.address);
+      const amountC = await tokenC.balanceOf(owner1.address);
+
+      console.log("Owner1, amountA", amountA / 10 ** 18, "T");
+      console.log("Owner1, amountB", amountB / 10 ** 18, "T");
+      console.log("Owner1, amountC", amountC / 10 ** 18, "T");
+
+
+      // await tokenA.transferFrom(
+      //   owner1.address,
+      //   router02.address,
+      //   BigInt(50 * 10 ** 18)
+      // );
+      // await tokenB.transferFrom(
+      //   owner1.address,
+      //   router02.address,
+      //   BigInt(50 * 10 ** 18)
+      // );
+
+      let pathAB = [tokenA.address, tokenB.address];
+      let pathBC = [tokenB.address, tokenC.address];
+      let amountIn = 5 * 1000;
+      let amountOutMin = 4 * 1000;
+
+      await router02.swapExactTokensForTokens(
+        amountIn,
+        amountOutMin,
+        pathAB,
+        owner1.address,
+        Math.floor(Date.now() / 1000) + 60 * 10
+      );
+
+      await router02.swapExactTokensForTokens(
+        amountIn,
+        amountOutMin,
+        pathBC,
+        owner1.address,
+        Math.floor(Date.now() / 1000) + 60 * 10
+      );
+
+      const amountAA = await tokenA.balanceOf(owner1.address);
+      const amountBB = await tokenB.balanceOf(owner1.address);
+      const amountCC = await tokenC.balanceOf(owner1.address);
+
+      console.log();
+      console.log("amoutAA", amountAA / 10 ** 18);
+      console.log("amoutBB", amountBB / 10 ** 18);
+      console.log("amoutCC", amountCC / 10 ** 18);
+      console.log();
+      console.log("A - AA", (amountA - amountAA) / 10 ** 18);
+      console.log("B - BB", (amountB - amountBB) / 10 ** 18);
+      console.log("C - CC", (amountC - amountCC) / 10 ** 18);
+
+      console.log(" ~~~~~~ After swap ~~~~~~ ");
+
+      console.log("--- A-B ---");
+
+      const pairInfoAB = await liquidityValueCalculator.pairInfo(
+        tokenA.address,
+        tokenB.address
+      );
+      console.log("reserveA", pairInfoAB[0].toString());
+      console.log("reserveB", pairInfoAB[1].toString());
+      console.log("totalSupply", pairInfoAB[2].toString());
+
+      console.log("--- B-C ---");
+
+      const pairInfoBC = await liquidityValueCalculator.pairInfo(
+        tokenA.address,
+        tokenB.address
+      );
+      console.log("reserveB", pairInfoBC[0].toString());
+      console.log("reserveC", pairInfoBC[1].toString());
+      console.log("totalSupply", pairInfoBC[2].toString());
+    });
+
+    it("should swap 100 from A to C", async () => {
+      let pathAC = [tokenA.address, tokenB.address, tokenC.address];
+      let amountIn = 2 * 1000;
+      let amountOutMin = 1 * 1000;
+
+      await router02.swapExactTokensForTokens(
+        amountIn,
+        amountOutMin,
+        pathAC,
+        owner1.address,
+        Math.floor(Date.now() / 1000) + 60 * 10
+      );
+
+      console.log("--- A-B ---");
+
+      const pairInfoAB = await liquidityValueCalculator.pairInfo(
+        tokenA.address,
+        tokenB.address
+      );
+      console.log("reserveA", pairInfoAB[0].toString());
+      console.log("reserveB", pairInfoAB[1].toString());
+      console.log("totalSupply", pairInfoAB[2].toString());
+
+      console.log("--- B-C ---");
+
+      const pairInfoBC = await liquidityValueCalculator.pairInfo(
+        tokenA.address,
+        tokenB.address
+      );
+      console.log("reserveB", pairInfoBC[0].toString());
+      console.log("reserveC", pairInfoBC[1].toString());
+      console.log("totalSupply", pairInfoBC[2].toString());
     });
 
     xit("should add addLiquidityETH", async () => {
