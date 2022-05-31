@@ -102,3 +102,25 @@ describe("Token contract", () => {
     // });
   });
 });
+
+
+
+// await farm.add("100", lp.address,[]);
+// await lp.connect(alice).approve(farm.address, "1000", {
+//                 from:alice.address,
+//             });
+// await lp.connect(bob).approve(farm.address, "1000", {
+//                 from:bob.address,
+//             });
+// await lp.connect(this.carol).approve(farm.address, "1000", {
+//                 from:carol.address,
+
+
+// await advanceTimeAndBlock(1); // t+9, b=22
+// await farm.connect(alice).deposit(0, "10", { from: alice.address }); // t+10, b=23
+//             // Bob deposits 20 LPs at t+14
+// await advanceTimeAndBlock(3); // t+13, b=24
+// await farm.connect(bob).deposit(0, "20", , { from: bob.address }); // t+14, b=25
+//             // Carol deposits 30 LPs at block t+18
+// await advanceTimeAndBlock(3); // t+17, b=26
+// await farmconnect(carol).deposit(0, "30", { from: carol.address }); // t+18, b=27

@@ -16,6 +16,8 @@
     "moonbeam": "npx hardhat run --network moonbeam scripts/deploy.js",
     "ganache": "npx hardhat run --network ganache scripts/deploy.js",
     "test": "npx hardhat test"
-
+  },
+  "devDependencies": {
+    "solpp": "^0.11.5"
   }
 }
