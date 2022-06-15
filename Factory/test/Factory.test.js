@@ -3,6 +3,8 @@ const { expect } = require("chai");
 const { assert } = require("chai");
 const { ethers } = require("hardhat");
 
+const { advanceTimeAndBlock } = require("./utils");
+
 async function gotForward(time) {
   await network.provider.send("evm_setNextBlockTimestamp", [time]);
   await network.provider.send("evm_mine");
@@ -281,8 +283,8 @@ describe("Token contract", () => {
         Math.floor(Date.now() / 1000) + 60 * 10
       );
 
-      console.log("sleep for 1 sec");
-      await sleep(1000);
+      console.log("Advance Time & Block");
+      await advanceTimeAndBlock(1);
 
       const balanceAafterSwap =
         (await tokenA.balanceOf(owner1.address)) / 10 ** 18;

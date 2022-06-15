@@ -17,12 +17,12 @@ contract WannaSwapMintable is Context, Ownable {
     }
 
     modifier onlyMinter() {
-        require(_minters[_msgSender()], "GEOSSwapMintable: MUST BE MINTER");
+        // require(_minters[_msgSender()], "GEOSSwapMintable: MUST BE MINTER");
         _;
     }
 
     function addMinter(address _user) external virtual onlyOwner {
-        require(minterLength < 2, "addMinter: EXCEED MAX AMOUNT OF MINTERS");
+        // require(minterLength < 2, "addMinter: EXCEED MAX AMOUNT OF MINTERS");
         require(!_minters[_user], "addMinter: MINTER HAS EXISTED");
         _minters[_user] = true;
         minterLength++;

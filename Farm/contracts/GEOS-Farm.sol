@@ -35,7 +35,7 @@ contract GeosFarm is Ownable {
     address public constant burnAddress =
         address(0x000000000000000000000000000000000000dEaD);
 
-    uint256 public totalGeos;
+    // uint256 public totalGeos;
     uint256 public mintedGeos;
     uint256 public geosPerBlock;
 
@@ -48,6 +48,8 @@ contract GeosFarm is Ownable {
     uint256 public totalAllocPoint = 0;
     uint256 public startBlock;
 
+    uint256 public totalGeosInPools = 0;
+
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
     event EmergencyWithdraw(
@@ -56,22 +58,22 @@ contract GeosFarm is Ownable {
         uint256 amount
     );
     event SetEmissionRate(uint256 geosPerBlock);
-    event SetTotalGeos(uint256 totalGeos);
+    // event SetTotalGeos(uint256 totalGeos);
     event AddPool(uint256 allocPoint, address lpToken, bool withUpdate);
     event SetPool(uint256 indexed pid, uint256 allocPoint, bool withUpdate);
 
     constructor(
         GeosSwapToken _geos,
         uint256 _geosPerBlock,
-        uint256 _startBlock,
-        uint256 _totalGeos
+        uint256 _startBlock
+        // uint256 _totalGeos
     ) public {
-        require(_totalGeos <= _geos.maxSupply(), "BAD TOTALAMOUNT");
+        // require(_totalGeos <= _geos.maxSupply(), "BAD TOTALAMOUNT");
         geos = _geos;
         geosPerBlock = _geosPerBlock;
         // startBlock = _startBlock;
         startBlock = block.number;
-        totalGeos = _totalGeos;
+        // totalGeos = _totalGeos;
 
         // console.log("totalGeos is %s", totalGeos);
     }
@@ -83,14 +85,14 @@ contract GeosFarm is Ownable {
         emit SetEmissionRate(_geosPerBlock);
     }
 
-    function setTotalGeos(uint256 _totalGeos) external onlyOwner {
-        massUpdatePools();
-        require(_totalGeos <= geos.maxSupply(), "setTotalGeos: BAD totalGeos");
-        require(_totalGeos >= mintedGeos, "setTotalGeos: BAD totalGeos");
-        totalGeos = _totalGeos;
+    // function setTotalGeos(uint256 _totalGeos) external onlyOwner {
+    //     massUpdatePools();
+    //     require(_totalGeos <= geos.maxSupply(), "setTotalGeos: BAD totalGeos");
+    //     require(_totalGeos >= mintedGeos, "setTotalGeos: BAD totalGeos");
+    //     totalGeos = _totalGeos;
 
-        emit SetTotalGeos(_totalGeos);
-    }
+    //     emit SetTotalGeos(_totalGeos);
+    // }
 
     function poolLength() external view returns (uint256) {
         return poolInfo.length;
@@ -180,15 +182,17 @@ contract GeosFarm is Ownable {
         uint256 totalSupply = geos.totalSupply();
         uint256 maxCanMint = maxSupply.sub(totalSupply);
 
-        uint256 currTotalGeos = totalGeos;
-        uint256 currMintedGeos = mintedGeos;
-        uint256 maxCanMintByChef = currTotalGeos.sub(currMintedGeos);
+        farmGeos = maxCanMint > 0 ? _reward : 0;
 
-        maxCanMintByChef = maxCanMint > maxCanMintByChef
-            ? maxCanMintByChef
-            : maxCanMint;
+        // uint256 currTotalGeos = totalGeos;
+        // uint256 currMintedGeos = mintedGeos;
+        // uint256 maxCanMintByChef = currTotalGeos.sub(currMintedGeos);
 
-        farmGeos = maxCanMintByChef > _reward ? _reward : maxCanMintByChef;
+        // maxCanMintByChef = maxCanMint > maxCanMintByChef
+        //     ? maxCanMintByChef
+        //     : maxCanMint;
+
+        // farmGeos = maxCanMintByChef > _reward ? _reward : maxCanMintByChef;
     }
 
     function massUpdatePools() public {
@@ -223,7 +227,8 @@ contract GeosFarm is Ownable {
     }
 
     function deposit(uint256 _pid, uint256 _amount) public {
-        require(_pid != 0, "deposit CAKE by staking");
+        // require(_pid != 0, "deposit GEOS by staking");
+        require(_pid < poolInfo.length, "deposit: BAD POOL");
 
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
@@ -246,6 +251,10 @@ contract GeosFarm is Ownable {
                 _amount
             );
             user.amount = user.amount.add(_amount);
+
+            if (address(pool.lpToken) == address(geos)) {
+                totalGeosInPools = totalGeosInPools.add(_amount);
+            }
         }
         user.rewardDebt = user.amount.mul(pool.accGeosPerShare).div(1e12);
         pool.totalLp = pool.totalLp.add(_amount);
@@ -270,6 +279,10 @@ contract GeosFarm is Ownable {
         if (_amount > 0) {
             user.amount = user.amount.sub(_amount);
             pool.lpToken.safeTransfer(address(msg.sender), _amount);
+
+            if (address(pool.lpToken) == address(geos)) {
+                totalGeosInPools = totalGeosInPools.sub(_amount);
+            }
         }
         user.rewardDebt = user.amount.mul(pool.accGeosPerShare).div(1e12);
         pool.totalLp = pool.totalLp.sub(_amount);
@@ -279,18 +292,39 @@ contract GeosFarm is Ownable {
     function emergencyWithdraw(uint256 _pid) public {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
+
+        if (address(pool.lpToken) == address(geos)) {
+            totalGeosInPools = totalGeosInPools.sub(user.amount);
+        }
+
         pool.lpToken.safeTransfer(address(msg.sender), user.amount);
         emit EmergencyWithdraw(msg.sender, _pid, user.amount);
         user.amount = 0;
         user.rewardDebt = 0;
     }
 
-    function safeGeosTransfer(address _to, uint256 _amount) public onlyOwner {
-        uint256 geosBal = geos.balanceOf(address(this));
-        if (_amount > geosBal) {
-            geos.transfer(_to, geosBal);
-        } else {
+    // function safeGeosTransfer(address _to, uint256 _amount) public internal {
+    //     uint256 geosBal = geos.balanceOf(address(this));
+    //     if (_amount > geosBal) {
+    //         geos.transfer(_to, geosBal);
+    //     } else {
+    //         geos.transfer(_to, _amount);
+    //     }
+    // }
+
+    function safeGeosTransfer(address _to, uint256 _amount) internal {
+        //SolarBal = total geos in SolarDistributor - total geos in Geos pools, this will make sure that GeosDistributor never transfer rewards from deposited Goes pools
+        uint256 GeosBal = geos.balanceOf(address(this)).sub(totalGeosInPools);
+
+        console.log("+", GeosBal);
+        console.log("Amount", _amount);
+
+        if (_amount >= GeosBal) {
+            geos.transfer(_to, GeosBal);
+        } else if (_amount > 0) {
             geos.transfer(_to, _amount);
         }
+
+        // if (geos.balanceOf(address(this)) > totalGeosInPools) {}
     }
 }
