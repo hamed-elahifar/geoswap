@@ -1,0 +1,70 @@
+const { expect } = require("chai");
+
+describe("Token contract", () => {
+  let Token, token, Vault, vault, owner, addr1, addr2;
+
+  beforeEach(async () => {
+    // "ethers" inject automatically by hardhat
+    Token = await ethers.getContractFactory("GeosSwapToken");
+    token = await Token.deploy();
+
+    Vault = await ethers.getContractFactory("GeosVault");
+    vault = await Vault.deploy(token.address, 10, 10, 0);
+    [owner, addr1, addr2, _] = await ethers.getSigners();
+  });
+
+  describe("Deployment", () => {
+    it("should check initial values", async () => {
+      const totalGeos = await vault.totalGeos.call();
+      console.log("totalGeos", totalGeos);
+
+      const mintedGeos = await vault.mintedGeos.call();
+      console.log("mintedGeos", mintedGeos);
+
+      const geosPerBlock = await vault.geosPerBlock.call();
+      console.log("geosPerBlock", geosPerBlock);
+
+      const startBlock = await vault.startBlock.call();
+      console.log("startBlock", startBlock);
+
+      const burnAddress = await vault.burnAddress.call();
+      console.log("burnAddress", burnAddress);
+
+      const totalAllocPoint = await vault.totalAllocPoint.call();
+      console.log("totalAllocPoint", totalAllocPoint);
+
+      const geos = await vault.geos.call();
+      console.log("geos", geos);
+      console.log("token", token.address);
+
+      // const userInfo = await farm.userInfo.call(0);
+      // console.log("userInfo", userInfo);
+
+      // const poolInfo = await farm.poolInfo.call(0);
+      // console.log("poolInfo", poolInfo);
+    });
+
+    it("should setEmissionRate", async () => {
+      await vault.setEmissionRate(20);
+
+      const geosPerBlock = await vault.geosPerBlock.call();
+      expect(geosPerBlock).to.equal(20n);
+    });
+
+    it("should add pool", async () => {
+      await vault.add(10, token.address, true);
+
+      const poolLength = await vault.poolLength();
+      expect(poolLength).to.equal(1n);
+
+      const poolInfo = await vault.poolInfo(0);
+      console.log("poolInfo", poolInfo);
+    });
+  });
+
+  describe("Tranactions", () => {
+    // it("should add new pool", async () => {
+    //   await token.add(1, 100, true);
+    // });
+  });
+});

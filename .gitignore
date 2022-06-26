@@ -16,6 +16,12 @@ Farm/node_modules/
 Farm/package-lock.json
 Farm/.env
 
+Farm2/artifacts/
+Farm2/cache/
+Farm2/node_modules/
+Farm2/package-lock.json
+Farm2/.env
+
 Staking/artifacts/
 Staking/cache/
 Staking/node_modules/
