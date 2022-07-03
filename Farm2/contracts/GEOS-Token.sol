@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./WannaSwapMintable.sol";
 
 contract GeosSwapToken is ERC20("GeosSwapToken", "GEOS"), WannaSwapMintable {
-    uint256 private _maxSupply = 100_000_000_000_000_000_000_000_000;
+    uint256 private _maxSupply =    100_000_000_000_000_000_000_000_000;
     uint256 private _initialSupply = 10_000_000_000_000_000_000_000_000;
 
     constructor() public {

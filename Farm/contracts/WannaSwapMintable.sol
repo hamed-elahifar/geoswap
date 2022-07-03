@@ -17,7 +17,7 @@ contract WannaSwapMintable is Context, Ownable {
     }
 
     modifier onlyMinter() {
-        // require(_minters[_msgSender()], "GEOSSwapMintable: MUST BE MINTER");
+        require(_minters[_msgSender()], "GEOSSwapMintable: MUST BE MINTER");
         _;
     }
 

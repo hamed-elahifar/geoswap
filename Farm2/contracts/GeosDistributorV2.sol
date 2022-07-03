@@ -5,7 +5,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
-import "./rewarders/IComplexRewarder.sol";
 import "./libraries/BoringERC20.sol";
 import "./ISolarPair.sol";
 
@@ -29,7 +28,6 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         uint16 depositFeeBP; // Deposit fee in basis points
         uint256 harvestInterval; // Harvest interval in seconds
         uint256 totalLp; // Total token in Pool
-        IComplexRewarder[] rewarders; // Array of rewarder contract for pools with incentives
     }
 
     IBoringERC20 public geos;
@@ -96,16 +94,14 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         uint256 allocPoint,
         IBoringERC20 indexed lpToken,
         uint16 depositFeeBP,
-        uint256 harvestInterval,
-        IComplexRewarder[] indexed rewarders
+        uint256 harvestInterval
     );
 
     event Set(
         uint256 indexed pid,
         uint256 allocPoint,
         uint16 depositFeeBP,
-        uint256 harvestInterval,
-        IComplexRewarder[] indexed rewarders
+        uint256 harvestInterval
     );
 
     event UpdatePool(
@@ -232,10 +228,8 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         uint256 _allocPoint,
         IBoringERC20 _lpToken,
         uint16 _depositFeeBP,
-        uint256 _harvestInterval,
-        IComplexRewarder[] calldata _rewarders
+        uint256 _harvestInterval
     ) public onlyOwner {
-        // require(_rewarders.length <= 10, "add: too many rewarders");
         // require(
         //     _depositFeeBP <= MAXIMUM_DEPOSIT_FEE_RATE,
         //     "add: deposit fee too high"
@@ -248,17 +242,6 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
             Address.isContract(address(_lpToken)),
             "add: LP token must be a valid contract"
         );
-
-        for (
-            uint256 rewarderId = 0;
-            rewarderId < _rewarders.length;
-            ++rewarderId
-        ) {
-            require(
-                Address.isContract(address(_rewarders[rewarderId])),
-                "add: rewarder must be contract"
-            );
-        }
 
         require(poolIndex[address(_lpToken)] == 0, "addPool: EXISTED POOL");
 
@@ -278,8 +261,7 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
                 accGeosPerShare: 0,
                 depositFeeBP: _depositFeeBP,
                 harvestInterval: _harvestInterval,
-                totalLp: 0,
-                rewarders: _rewarders
+                totalLp: 0
             })
         );
 
@@ -290,8 +272,7 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
             _allocPoint,
             _lpToken,
             _depositFeeBP,
-            _harvestInterval,
-            _rewarders
+            _harvestInterval
         );
     }
 
@@ -300,11 +281,8 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         uint256 _pid,
         uint256 _allocPoint,
         uint16 _depositFeeBP,
-        uint256 _harvestInterval,
-        IComplexRewarder[] calldata _rewarders
+        uint256 _harvestInterval
     ) public onlyOwner validatePoolByPid(_pid) {
-        // require(_rewarders.length <= 10, "set: too many rewarders");
-
         // require(
         //     _depositFeeBP <= MAXIMUM_DEPOSIT_FEE_RATE,
         //     "set: deposit fee too high"
@@ -313,17 +291,6 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
             _harvestInterval <= MAXIMUM_HARVEST_INTERVAL,
             "set: invalid harvest interval"
         );
-
-        for (
-            uint256 rewarderId = 0;
-            rewarderId < _rewarders.length;
-            ++rewarderId
-        ) {
-            require(
-                Address.isContract(address(_rewarders[rewarderId])),
-                "set: rewarder must be contract"
-            );
-        }
 
         _massUpdatePools();
 
@@ -335,14 +302,12 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         poolInfo[_pid].allocPoint = _allocPoint;
         poolInfo[_pid].depositFeeBP = _depositFeeBP;
         poolInfo[_pid].harvestInterval = _harvestInterval;
-        poolInfo[_pid].rewarders = _rewarders;
 
         emit Set(
             _pid,
             _allocPoint,
             _depositFeeBP,
-            _harvestInterval,
-            _rewarders
+            _harvestInterval
         );
     }
 
@@ -362,6 +327,10 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         UserInfo storage user = userInfo[_pid][_user];
         uint256 accGeosPerShare = pool.accGeosPerShare;
         uint256 lpSupply = pool.totalLp;
+
+        addresses = new address[](1);
+        symbols = new string[](1);
+        decimals = new uint256[](1);
 
         if (block.timestamp > pool.lastRewardTimestamp && lpSupply != 0) {
             uint256 multiplier = block.timestamp - pool.lastRewardTimestamp;
@@ -383,41 +352,14 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
             );
         }
 
-        uint256 pendingSolar = (((user.amount * accGeosPerShare) /
+        uint256 pendingGeos = (((user.amount * accGeosPerShare) /
             ACC_TOKEN_PRECISION) - user.rewardDebt) + user.rewardLockedUp;
-
-        addresses = new address[](pool.rewarders.length + 1);
-        symbols = new string[](pool.rewarders.length + 1);
-        amounts = new uint256[](pool.rewarders.length + 1);
-        decimals = new uint256[](pool.rewarders.length + 1);
 
         addresses[0] = address(geos);
         symbols[0] = IBoringERC20(geos).safeSymbol();
         decimals[0] = IBoringERC20(geos).safeDecimals();
-        amounts[0] = pendingSolar;
+        amounts[0] = pendingGeos;
 
-        for (
-            uint256 rewarderId = 0;
-            rewarderId < pool.rewarders.length;
-            ++rewarderId
-        ) {
-            addresses[rewarderId + 1] = address(
-                pool.rewarders[rewarderId].rewardToken()
-            );
-
-            symbols[rewarderId + 1] = IBoringERC20(
-                pool.rewarders[rewarderId].rewardToken()
-            ).safeSymbol();
-
-            decimals[rewarderId + 1] = IBoringERC20(
-                pool.rewarders[rewarderId].rewardToken()
-            ).safeDecimals();
-
-            amounts[rewarderId + 1] = pool.rewarders[rewarderId].pendingTokens(
-                _pid,
-                _user
-            );
-        }
     }
 
     /// @notice View function to see pool rewards per sec
@@ -434,10 +376,10 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
     {
         PoolInfo storage pool = poolInfo[_pid];
 
-        addresses = new address[](pool.rewarders.length + 1);
-        symbols = new string[](pool.rewarders.length + 1);
-        decimals = new uint256[](pool.rewarders.length + 1);
-        rewardsPerSec = new uint256[](pool.rewarders.length + 1);
+        addresses = new address[](1);
+        symbols = new string[](1);
+        decimals = new uint256[](1);
+        rewardsPerSec = new uint256[](1);
 
         addresses[0] = address(geos);
         symbols[0] = IBoringERC20(geos).safeSymbol();
@@ -454,45 +396,6 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
             totalAllocPoint /
             total;
 
-        for (
-            uint256 rewarderId = 0;
-            rewarderId < pool.rewarders.length;
-            ++rewarderId
-        ) {
-            addresses[rewarderId + 1] = address(
-                pool.rewarders[rewarderId].rewardToken()
-            );
-
-            symbols[rewarderId + 1] = IBoringERC20(
-                pool.rewarders[rewarderId].rewardToken()
-            ).safeSymbol();
-
-            decimals[rewarderId + 1] = IBoringERC20(
-                pool.rewarders[rewarderId].rewardToken()
-            ).safeDecimals();
-
-            rewardsPerSec[rewarderId + 1] = pool
-                .rewarders[rewarderId]
-                .poolRewardsPerSec(_pid);
-        }
-    }
-
-    // View function to see rewarders for a pool
-    function poolRewarders(uint256 _pid)
-        external
-        view
-        validatePoolByPid(_pid)
-        returns (address[] memory rewarders)
-    {
-        PoolInfo storage pool = poolInfo[_pid];
-        rewarders = new address[](pool.rewarders.length);
-        for (
-            uint256 rewarderId = 0;
-            rewarderId < pool.rewarders.length;
-            ++rewarderId
-        ) {
-            rewarders[rewarderId] = address(pool.rewarders[rewarderId]);
-        }
     }
 
     // View function to see if user can harvest Solar.
@@ -631,18 +534,6 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         user.rewardDebt =
             (user.amount * pool.accGeosPerShare) / ACC_TOKEN_PRECISION;
 
-        for (
-            uint256 rewarderId = 0;
-            rewarderId < pool.rewarders.length;
-            ++rewarderId
-        ) {
-            pool.rewarders[rewarderId].onGeosReward(
-                _pid,
-                msg.sender,
-                user.amount
-            );
-        }
-
         if (_amount > 0) {
             pool.totalLp += _amount;
         }
@@ -680,18 +571,6 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         user.rewardDebt =
             (user.amount * pool.accGeosPerShare) / ACC_TOKEN_PRECISION;
 
-        for (
-            uint256 rewarderId = 0;
-            rewarderId < pool.rewarders.length;
-            ++rewarderId
-        ) {
-            pool.rewarders[rewarderId].onGeosReward(
-                _pid,
-                msg.sender,
-                user.amount
-            );
-        }
-
         if (_amount > 0) {
             pool.totalLp -= _amount;
         }
@@ -716,14 +595,6 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         user.rewardLockedUp = 0;
         user.nextHarvestUntil = 0;
         pool.totalLp -= amount;
-
-        for (
-            uint256 rewarderId = 0;
-            rewarderId < pool.rewarders.length;
-            ++rewarderId
-        ) {
-            pool.rewarders[rewarderId].onGeosReward(_pid, msg.sender, 0);
-        }
 
         if (address(pool.lpToken) == address(geos)) {
             totalGeosInPools -= amount;
