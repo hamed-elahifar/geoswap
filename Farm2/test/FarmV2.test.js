@@ -13,7 +13,16 @@ function poolInfoLoger(poolinfo) {
 
 describe("Token contract", () => {
   let GeosToken, geosToken, Farm, farm;
-  let signers, deployer, bob, carol, dev, treasury, investor, minter, alice;
+  let signers,
+    deployer,
+    bob,
+    carol,
+    dev,
+    treasury,
+    investor,
+    minter,
+    alice,
+    trustedForwarder;
 
   let ERC20Mock, lp1, lp2;
 
@@ -39,9 +48,10 @@ describe("Token contract", () => {
     investor = signers[5];
     minter = signers[6];
     alice = signers[7];
+    trustedForwarder = signers[8];
 
-    GeosToken = await ethers.getContractFactory("GeosSwapToken");
-    geosToken = await GeosToken.deploy();
+    GeosToken = await ethers.getContractFactory("GeosSwapTokenV2");
+    geosToken = await GeosToken.deploy(trustedForwarder.address);
 
     ERC20Mock = await ethers.getContractFactory("MockERC20");
 
@@ -55,11 +65,11 @@ describe("Token contract", () => {
     await lp2.transfer(bob.address, "1000");
     await lp2.transfer(carol.address, "1000");
 
-    Farm = await ethers.getContractFactory("GeosFarm");
+    Farm = await ethers.getContractFactory("GeosDistributorV2");
     farm = await Farm.deploy(
       geosToken.address, // GeosSwapToken _geos,
       100, // geosPerBlock,
-      0, // startBlock,
+      0 // startBlock,
       // 0 // totalGeos
     );
 
@@ -170,7 +180,7 @@ describe("Token contract", () => {
       await farm.connect(alice).deposit(0, "10", { from: alice.address }); // t+10, b=23
       // Bob deposits 20 LPs at t+14
       await advanceTimeAndBlock(3); // t+13, b=24
-      await farm.connect(bob).deposit(0, "20", /*{ from: bob.address }*/); // t+14, b=25
+      await farm.connect(bob).deposit(0, "20" /*{ from: bob.address }*/); // t+14, b=25
       // Carol deposits 30 LPs at block t+18
       await advanceTimeAndBlock(3); // t+17, b=26
       await farm.connect(carol).deposit(0, "30", { from: carol.address }); // t+18, b=27
@@ -216,7 +226,6 @@ describe("Token contract", () => {
         217 - tokenOffset,
         317 + tokenOffset
       );
-      
     });
   });
 });
