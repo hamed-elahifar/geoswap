@@ -16,9 +16,9 @@ cd ..
 cd Factory
 npm run moonbeam
 
-echo " ++++++++++ Deploying Farm..."
+echo " ++++++++++ Deploying Farm V2..."
 cd ..
-cd Farm
+cd Farm2
 npm run moonbeam
 
 echo " ++++++++++ Deploying Staking..."
