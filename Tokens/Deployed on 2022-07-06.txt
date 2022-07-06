@@ -1,0 +1,51 @@
+ ++++++++++ Deploying Tokens...
+
+> geoswap@1.0.0 moonbeam
+> npx hardhat run --network moonbeam scripts/deploy.js
+
+You are using a version of Node.js that is not supported by Hardhat, and it may work incorrectly, or not work at all.
+
+Please, make sure you are using a supported version of Node.js.
+
+To learn more about which versions of Node.js are supported go to https://hardhat.org/nodejs-versions
+============================== Start Deploying ==============================
+Deployer: 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+Deployer balance: 4392541790500000000
+USDC Token address: 0xd4e90eb2715e7E1849480c674b9C11e5A78Af403
+
+Deployer: 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+Deployer balance: 4392541790500000000
+USDT Token address: 0x557a9Ccb11c4E147e011631050DDF8F9F0621cEE
+
+ ++++++++++ Deploying Factory...
+
+> moonbeam
+> npx hardhat run --network moonbeam scripts/deploy.js
+
+Deploying contracts using 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+WETH deployed to : 0xce8BBA9bd6230d3ad8CbF8194A96bE905F5377fF
+Factory deployed to : 0x34101eDF6d2CF5FCBD03870c6524FcaD8e8f8587
+Router V02 deployed to :  0xcEC6Cc2534e9b12978121717f8dC2cA4F531ac76
+Multicall v2 address: 0x733f9458CBf78944654b3e9c6C2453FC7523d984
+ ++++++++++ Deploying Farm V2...
+
+> moonbeam
+> npx hardhat run --network moonbeam scripts/deploy.js
+
+You are using a version of Node.js that is not supported by Hardhat, and it may work incorrectly, or not work at all.
+
+Please, make sure you are using a supported version of Node.js.
+
+To learn more about which versions of Node.js are supported go to https://hardhat.org/nodejs-versions
+Deployer: 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+Deployer balance: 4376312998500000000
+Token address: 0x354A9ace00FC6E944215994a3b939D0a3D0ab9F1
+ ++++++++++ Deploying Staking...
+
+> moonbeam
+> npx hardhat run --network moonbeam scripts/deploy.js
+
+Deploying contracts using 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+FARM_REWARD_HOLDER 0x2AA9EA82AD7aC507401c652086584aE729A24C6D
+Token Farm address: 0x7A7840307Fac426908102B82f4f68187DB706631
+Locker address: 0xd1c287B1c33d447650dE33C27fDA6f5A798Af534

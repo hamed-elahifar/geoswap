@@ -14,7 +14,8 @@ async function main() {
 
   const Token = await ethers.getContractFactory("GeosSwapTokenV2");
   const token = await Token.deploy(
-    "0x570473a6AA2E38155C4cc1249aEF1E7403257DB1" /* deployer.address /* trustedForwarder */
+    /* deployer.address /* trustedForwarder */
+    "0x4FCDa98aE1dA6a54573263302E149831Bc35217C" // Behnam 0x4FCDa98aE1dA6a54573263302E149831Bc35217C
   );
   console.log("Token address:", token.address);
 
