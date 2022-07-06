@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity =0.8.1;
+pragma solidity =0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-import "./GEOS-Token.sol";
+import "./GEOS-Token-V2.sol";
 import "./TransferHelper.sol";
 
 contract GeosVault is Ownable {
@@ -33,7 +33,7 @@ contract GeosVault is Ownable {
     }
 
     // The CAKE TOKEN!
-    GeosSwapToken public geos;
+    GeosSwapTokenV2 public geos;
 
     // Burn Address
     address public constant burnAddress =
@@ -69,7 +69,7 @@ contract GeosVault is Ownable {
     event SetPool(uint256 indexed pid, uint256 allocPoint, bool withUpdate);
 
     constructor(
-        GeosSwapToken _geos,
+        GeosSwapTokenV2 _geos,
         uint256 _geosPerBlock,
         uint256 _startBlock,
         uint256 _totalGeos

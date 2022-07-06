@@ -4,7 +4,7 @@ cd $(dirname $0)
 
 cp -rf ./.env ./Tokens/
 cp -rf ./.env ./Factory/
-cp -rf ./.env ./Farm/
+cp -rf ./.env ./Farm2/
 cp -rf ./.env ./Staking/
 
 echo " ++++++++++ Deploying Tokens..."
@@ -16,9 +16,9 @@ cd ..
 cd Factory
 npm run ganache
 
-echo " ++++++++++ Deploying Farm..."
+echo " ++++++++++ Deploying Farm V2..."
 cd ..
-cd Farm
+cd Farm2
 npm run ganache
 
 echo " ++++++++++ Deploying Staking..."

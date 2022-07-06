@@ -12,8 +12,10 @@ async function main() {
 
   // =============================== Token ================================================
 
-  const Token = await ethers.getContractFactory("GeosSwapToken");
-  const token = await Token.deploy();
+  const Token = await ethers.getContractFactory("GeosSwapTokenV2");
+  const token = await Token.deploy(
+    "0x570473a6AA2E38155C4cc1249aEF1E7403257DB1" /* deployer.address /* trustedForwarder */
+  );
   console.log("Token address:", token.address);
 
   const tokenData = {
@@ -25,33 +27,33 @@ async function main() {
 
   // =============================== Farm ================================================
 
-  await sleep(sleepDuration);
+  // await sleep(sleepDuration);
 
-  const Farm = await ethers.getContractFactory("GeosFarm");
-  const farm = await Farm.deploy(token.address, 1, 0, 10_000_000);
-  console.log("Farm address:", farm.address);
+  // const Farm = await ethers.getContractFactory("GeosDistributorV2");
+  // const farm = await Farm.deploy(token.address, 1, 0, 10_000_000);
+  // console.log("Farm address:", farm.address);
 
-  const farmData = {
-    address: farm.address,
-    abi: JSON.parse(farm.interface.format("json")),
-  };
+  // const farmData = {
+  //   address: farm.address,
+  //   abi: JSON.parse(farm.interface.format("json")),
+  // };
 
-  fs.writeFileSync("abi/farm.json", JSON.stringify(farmData, null, 2));
+  // fs.writeFileSync("abi/farm.json", JSON.stringify(farmData, null, 2));
 
   // =============================== Vault ================================================
 
-  await sleep(sleepDuration);
+  // await sleep(sleepDuration);
 
-  const Vault = await ethers.getContractFactory("GeosVault");
-  const vault = await Vault.deploy(token.address, 1, 0, 10_000_000);
-  console.log("Vault address:", vault.address);
+  // const Vault = await ethers.getContractFactory("GeosVault");
+  // const vault = await Vault.deploy(token.address, 1, 0, 10_000_000);
+  // console.log("Vault address:", vault.address);
 
-  const vaultData = {
-    address: vault.address,
-    abi: JSON.parse(vault.interface.format("json")),
-  };
+  // const vaultData = {
+  //   address: vault.address,
+  //   abi: JSON.parse(vault.interface.format("json")),
+  // };
 
-  fs.writeFileSync("abi/vault.json", JSON.stringify(vaultData, null, 2));
+  // fs.writeFileSync("abi/vault.json", JSON.stringify(vaultData, null, 2));
 }
 
 main()
