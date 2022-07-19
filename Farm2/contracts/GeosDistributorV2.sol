@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/utils/Address.sol";
 import "./libraries/BoringERC20.sol";
 import "./ISolarPair.sol";
 
+import "hardhat/console.sol";
+
 contract GeosDistributorV2 is Ownable, ReentrancyGuard {
     using BoringERC20 for IBoringERC20;
 
@@ -331,6 +333,7 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         addresses = new address[](1);
         symbols = new string[](1);
         decimals = new uint256[](1);
+        amounts = new uint256[](1);
 
         if (block.timestamp > pool.lastRewardTimestamp && lpSupply != 0) {
             uint256 multiplier = block.timestamp - pool.lastRewardTimestamp;
@@ -359,7 +362,6 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         symbols[0] = IBoringERC20(geos).safeSymbol();
         decimals[0] = IBoringERC20(geos).safeDecimals();
         amounts[0] = pendingGeos;
-
     }
 
     /// @notice View function to see pool rewards per sec

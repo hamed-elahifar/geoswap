@@ -30,10 +30,17 @@ module.exports = {
     ganache: {
       url: "HTTP://127.0.0.1:8545",
       accounts: [process.env.PRIVATE_KEY],
+      gas: 12000000,
+      blockGasLimit: 0x1fffffffffffff,
+      allowUnlimitedContractSize: true,
+      timeout: 1800000,
     },
     moonbeam: {
       url: "https://rpc.api.moonbase.moonbeam.network",
       accounts: [process.env.PRIVATE_KEY],
+    },
+    hardhat: {
+      allowUnlimitedContractSize: true,
     },
   },
 };
