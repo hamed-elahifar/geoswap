@@ -99,22 +99,24 @@ const getInfo = async () => {
   console.log(`balanceOf: ${balanceOfWETH}`);
 };
 
+const amount = 100_000;
+
 const approveUSDC = async () => {
-  const createReceipt = await USDC.approve(routerAddress, 1000);
+  const createReceipt = await USDC.approve(routerAddress, amount);
   await createReceipt.wait();
 
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
 const approveUSDT = async () => {
-  const createReceipt = await USDT.approve(routerAddress, 1000);
+  const createReceipt = await USDT.approve(routerAddress, amount);
   await createReceipt.wait();
 
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
 const approveWETH = async () => {
-  const createReceipt = await WETH.approve(routerAddress, 1000);
+  const createReceipt = await WETH.approve(routerAddress, amount);
   await createReceipt.wait();
 
   console.log(`Tx successful with hash: ${createReceipt.hash}`);

@@ -29,50 +29,81 @@ const getBalance = async () => {
 };
 
 const { abi: routerABI } = require("../abi/router.json");
+const { abi: factoryABI } = require("../abi/factory.json");
 
 const routerAddress = "0xcEC6Cc2534e9b12978121717f8dC2cA4F531ac76";
+const factoryAddress = "0x34101eDF6d2CF5FCBD03870c6524FcaD8e8f8587";
 
-const routerView = new ethers.Contract(routerAddress, routerABI, provider);
+const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+
+const router = new ethers.Contract(routerAddress, routerABI, wallet);
+const factory = new ethers.Contract(factoryAddress, factoryABI, wallet);
 
 const getInfo = async () => {
-  const WETH = await routerView.WETH();
+  const WETH = await router.WETH();
   console.log(`WETH is: ${WETH}`);
 
-  const factory = await routerView.factory();
+  const factory = await router.factory();
   console.log(`factory address is: ${factory}`);
 };
 
-// 4. Create wallet
-let wallet = new ethers.Wallet(PRIVATE_KEY, provider);
-
-const RouterChange = new ethers.Contract(routerAddress, routerABI, wallet);
-
 const USDC = "0xd4e90eb2715e7E1849480c674b9C11e5A78Af403";
 const USDT = "0x557a9Ccb11c4E147e011631050DDF8F9F0621cEE";
+const WETH = "0xa8FE53e9A816EA38B20b42f10F09906e6DcaC46a";
 
 const addLiquidity = async () => {
-  const createReceipt = await RouterChange.addLiquidity(
+  const createReceipt = await router.addLiquidity(
     USDC, // address tokenA,
     USDT, // address tokenB,
-    1000, // uint256 amountADesired,
-    1000, // uint256 amountBDesired,
-    10, // uint256 amountAMin,
-    10, // uint256 amountBMin,
+    100_000, // uint256 amountADesired,
+    100_000, // uint256 amountBDesired,
+    100, // uint256 amountAMin,
+    100, // uint256 amountBMin,
     ownerAddress, // address to,
-    new Date().getTime() + 1_000_000 // uint256 deadline
+    Math.floor(Date.now() / 1000) + 60 * 10 // uint256 deadline
   );
   await createReceipt.wait();
 
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
+let allPairsLength;
+
+const getAllPairsLength = async () => {
+  allPairsLength = await factory.allPairsLength();
+
+  console.log(`All Pairs Length: ${allPairsLength}`);
+};
+
+const allPairs = async () => {
+  // const result = await factory.allPairs(0);
+  // console.log(`All Pairs[0]: ${result}`);
+
+  // const details = await factory.getPair(result);
+  // console.log(`Details Pairs[${i}]: ${details}`);
+
+  for (let i = 0; i < allPairsLength; i++) {
+    const result = await factory.allPairs(i);
+    console.log(`All Pairs[${i}]: ${result}`);
+  }
+};
+
+const getPair = async (tokenA, tokenB) => {
+  const details = await factory.getPair(tokenA, tokenB);
+  console.log('TokenA',tokenA)
+  console.log('TokenB',tokenB)
+  console.log(`Details: ${details}`);
+};
+
 (async () => {
   try {
     await getBalance();
-    await getInfo();
-    await addLiquidity();
+    // await getInfo();
+    // await addLiquidity();
+    await getAllPairsLength();
+    await allPairs();
+    // await getPair(USDC, USDT);
   } catch (error) {
     console.log(error);
-    // console.log(Object.keys(error));
   }
 })();
