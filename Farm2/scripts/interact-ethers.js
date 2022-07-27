@@ -39,9 +39,11 @@ const GeosDistributorV2View = new ethers.Contract(
   provider
 );
 
+let allPoolLength;
+
 const getPoolLength = async () => {
-  const poolLength = await GeosDistributorV2View.poolLength();
-  console.log(`Pool Length is: ${poolLength}`);
+  allPoolLength = await GeosDistributorV2View.poolLength();
+  console.log(`Pool Length is: ${allPoolLength}`);
 };
 
 // 4. Create wallet
@@ -59,8 +61,29 @@ const startFarming = async () => {
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
+const addPool = async () => {
+  const createReceipt = await GeosDistributorV2Change.add(
+    "100", // uint256 _allocPoint,
+    "0xc548ac1CF9AabbDf8313f9A8A5d0Cd34F3E91588", // IBoringERC20 _lpToken,
+    0, // uint16 _depositFeeBP,
+    0 // uint256 _harvestInterval
+  );
+  await createReceipt.wait();
+
+  console.log(`Tx successful with hash: ${createReceipt.hash}`);
+};
+
+const getAllPoolInfo = async () => {
+  for (let i = 0; i < allPoolLength; i++) {
+    const result = await GeosDistributorV2Change.poolInfo(i);
+    console.log(`Pool Info for index[${i}]: ${result}`);
+  }
+};
+
 (async () => {
   await getBalance();
   await getPoolLength();
-  await startFarming();
+  // await startFarming();
+  // await addPool();
+  await getAllPoolInfo();
 })();

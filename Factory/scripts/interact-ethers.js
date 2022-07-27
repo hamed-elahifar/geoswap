@@ -76,12 +76,6 @@ const getAllPairsLength = async () => {
 };
 
 const allPairs = async () => {
-  // const result = await factory.allPairs(0);
-  // console.log(`All Pairs[0]: ${result}`);
-
-  // const details = await factory.getPair(result);
-  // console.log(`Details Pairs[${i}]: ${details}`);
-
   for (let i = 0; i < allPairsLength; i++) {
     const result = await factory.allPairs(i);
     console.log(`All Pairs[${i}]: ${result}`);
