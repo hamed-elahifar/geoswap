@@ -12,19 +12,19 @@ async function main() {
 
   // =============================== Token ================================================
 
-  // const Token = await ethers.getContractFactory("GeosSwapTokenV2");
-  // const token = await Token.deploy(
-  //   /* deployer.address /* trustedForwarder */
-  //   "0x4FCDa98aE1dA6a54573263302E149831Bc35217C" // Behnam 0x4FCDa98aE1dA6a54573263302E149831Bc35217C
-  // );
-  // console.log("Token address:", token.address);
+  const Token = await ethers.getContractFactory("GeosSwapTokenV2");
+  const token = await Token.deploy(
+    /* deployer.address /* trustedForwarder */
+    "0x4FCDa98aE1dA6a54573263302E149831Bc35217C" // Behnam 0x4FCDa98aE1dA6a54573263302E149831Bc35217C
+  );
+  console.log("Token address:", token.address);
 
-  // const tokenData = {
-  //   address: token.address,
-  //   abi: JSON.parse(token.interface.format("json")),
-  // };
+  const tokenData = {
+    address: token.address,
+    abi: JSON.parse(token.interface.format("json")),
+  };
 
-  // fs.writeFileSync("abi/Token.json", JSON.stringify(tokenData, null, 2));
+  fs.writeFileSync("abi/Token.json", JSON.stringify(tokenData, null, 2));
 
   // =============================== Farm ================================================
 

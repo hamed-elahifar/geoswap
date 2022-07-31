@@ -21,7 +21,7 @@ async function deploy() {
   fs.writeFileSync("abi/WETH.json", JSON.stringify(wethData, null, 2));
 
   // Deploy Factory
-  const factory = await ethers.getContractFactory("SolarFactory");
+  const factory = await ethers.getContractFactory("GeosFactory");
   const factoryInstance = await factory.deploy(deployerAddress);
   await factoryInstance.deployed();
 

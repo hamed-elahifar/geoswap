@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity =0.6.12;
 
-import "./ISolarRouter01.sol";
+import "./IGeosRouter01.sol";
 
-interface ISolarRouter02 is ISolarRouter01 {
+interface IGeosRouter02 is IGeosRouter01 {
     function removeLiquidityETHSupportingFeeOnTransferTokens(
         address token,
         uint256 liquidity,

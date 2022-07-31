@@ -22,7 +22,7 @@ describe("Token contract", () => {
     // "ethers" inject automatically by hardhat
     [owner1, owner2, , addr1, addr2, _] = await ethers.getSigners();
 
-    Factory = await ethers.getContractFactory("SolarFactory");
+    Factory = await ethers.getContractFactory("GeosFactory");
     factory = await Factory.deploy(owner1.address);
 
     TokenA = await ethers.getContractFactory("TokenA");

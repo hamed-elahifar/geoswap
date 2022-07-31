@@ -3,10 +3,10 @@ pragma solidity =0.6.12;
 
 import "./libraries/SafeMath.sol";
 
-contract SolarERC20 {
-    using SafeMathSolar for uint256;
+contract GeosERC20 {
+    using SafeMathGeos for uint256;
 
-    string public constant name = "SolarBeam LP Token";
+    string public constant name = "GeosBeam LP Token";
     string public constant symbol = "SLP";
     uint8 public constant decimals = 18;
     uint256 public totalSupply;
@@ -116,7 +116,7 @@ contract SolarERC20 {
         bytes32 r,
         bytes32 s
     ) external {
-        require(deadline >= block.timestamp, "SolarBeam: EXPIRED");
+        require(deadline >= block.timestamp, "GEOSwap: EXPIRED");
         bytes32 digest = keccak256(
             abi.encodePacked(
                 "\x19\x01",
@@ -136,7 +136,7 @@ contract SolarERC20 {
         address recoveredAddress = ecrecover(digest, v, r, s);
         require(
             recoveredAddress != address(0) && recoveredAddress == owner,
-            "SolarBeam: INVALID_SIGNATURE"
+            "GEOSwap: INVALID_SIGNATURE"
         );
         _approve(owner, spender, value);
     }

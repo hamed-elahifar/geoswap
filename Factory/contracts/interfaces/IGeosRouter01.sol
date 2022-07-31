@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity =0.6.12;
 
-interface ISolarRouter01 {
+interface IGeosRouter01 {
     function factory() external pure returns (address);
     function WETH() external pure returns (address);
 

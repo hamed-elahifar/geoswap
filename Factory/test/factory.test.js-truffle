@@ -2,7 +2,7 @@ const { BigNumber } = require("ethers");
 
 const { assert } = require("chai");
 
-const Factory = artifacts.require("SolarFactory");
+const Factory = artifacts.require("GeosFactory");
 const Router02 = artifacts.require("Router02");
 const TokenA = artifacts.require("TokenA");
 const TokenB = artifacts.require("TokenB");

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity =0.6.12;
 
-import "../interfaces/ISolarPair.sol";
+import "../interfaces/IGeosPair.sol";
 import "./SafeMath.sol";
 
-library SolarLibrary {
-    using SafeMathSolar for uint256;
+library GeosLibrary {
+    using SafeMathGeos for uint256;
 
     // returns sorted token addresses, used to handle return values from pairs sorted in this order
     function sortTokens(address tokenA, address tokenB)
@@ -13,11 +13,11 @@ library SolarLibrary {
         pure
         returns (address token0, address token1)
     {
-        require(tokenA != tokenB, "SolarLibrary: IDENTICAL_ADDRESSES");
+        require(tokenA != tokenB, "GeosLibrary: IDENTICAL_ADDRESSES");
         (token0, token1) = tokenA < tokenB
             ? (tokenA, tokenB)
             : (tokenB, tokenA);
-        require(token0 != address(0), "SolarLibrary: ZERO_ADDRESS");
+        require(token0 != address(0), "GeosLibrary: ZERO_ADDRESS");
     }
 
     // calculates the CREATE2 address for a pair without making any external calls
@@ -34,7 +34,7 @@ library SolarLibrary {
                         hex"ff",
                         factory,
                         keccak256(abi.encodePacked(token0, token1)),
-                        hex"930a662e5169ae7bb8a2c11ac1e2204075dbefe861835be24894c52421eb716a" // init code hash
+                        hex"efa10d22ef94bc8e58ec462bc851d335637fe1f31c226fbb8e76589db05ddce0" // init code hash
                     )
                 )
             )
@@ -48,7 +48,7 @@ library SolarLibrary {
         address tokenB
     ) internal view returns (uint256 reserveA, uint256 reserveB) {
         (address token0, ) = sortTokens(tokenA, tokenB);
-        (uint256 reserve0, uint256 reserve1, ) = ISolarPair(
+        (uint256 reserve0, uint256 reserve1, ) = IGeosPair(
             pairFor(factory, tokenA, tokenB)
         ).getReserves();
         (reserveA, reserveB) = tokenA == token0
@@ -62,10 +62,10 @@ library SolarLibrary {
         uint256 reserveA,
         uint256 reserveB
     ) internal pure returns (uint256 amountB) {
-        require(amountA > 0, "SolarLibrary: INSUFFICIENT_AMOUNT");
+        require(amountA > 0, "GeosLibrary: INSUFFICIENT_AMOUNT");
         require(
             reserveA > 0 && reserveB > 0,
-            "SolarLibrary: INSUFFICIENT_LIQUIDITY"
+            "GeosLibrary: INSUFFICIENT_LIQUIDITY"
         );
         amountB = amountA.mul(reserveB) / reserveA;
     }
@@ -76,10 +76,10 @@ library SolarLibrary {
         uint256 reserveIn,
         uint256 reserveOut
     ) internal pure returns (uint256 amountOut) {
-        require(amountIn > 0, "SolarLibrary: INSUFFICIENT_INPUT_AMOUNT");
+        require(amountIn > 0, "GeosLibrary: INSUFFICIENT_INPUT_AMOUNT");
         require(
             reserveIn > 0 && reserveOut > 0,
-            "SolarLibrary: INSUFFICIENT_LIQUIDITY"
+            "GeosLibrary: INSUFFICIENT_LIQUIDITY"
         );
         uint256 feeMul = uint256(10000).sub(25);
         uint256 amountInWithFee = amountIn.mul(feeMul);
@@ -94,10 +94,10 @@ library SolarLibrary {
         uint256 reserveIn,
         uint256 reserveOut
     ) internal pure returns (uint256 amountIn) {
-        require(amountOut > 0, "SolarLibrary: INSUFFICIENT_OUTPUT_AMOUNT");
+        require(amountOut > 0, "GeosLibrary: INSUFFICIENT_OUTPUT_AMOUNT");
         require(
             reserveIn > 0 && reserveOut > 0,
-            "SolarLibrary: INSUFFICIENT_LIQUIDITY"
+            "GeosLibrary: INSUFFICIENT_LIQUIDITY"
         );
         uint256 feeMul = uint256(10000).sub(25);
         uint256 numerator = reserveIn.mul(amountOut).mul(10000);
@@ -111,7 +111,7 @@ library SolarLibrary {
         uint256 amountIn,
         address[] memory path
     ) internal view returns (uint256[] memory amounts) {
-        require(path.length >= 2, "SolarLibrary: INVALID_PATH");
+        require(path.length >= 2, "GeosLibrary: INVALID_PATH");
         amounts = new uint256[](path.length);
         amounts[0] = amountIn;
         for (uint256 i; i < path.length - 1; i++) {
@@ -130,7 +130,7 @@ library SolarLibrary {
         uint256 amountOut,
         address[] memory path
     ) internal view returns (uint256[] memory amounts) {
-        require(path.length >= 2, "SolarLibrary: INVALID_PATH");
+        require(path.length >= 2, "GeosLibrary: INVALID_PATH");
         amounts = new uint256[](path.length);
         amounts[amounts.length - 1] = amountOut;
         for (uint256 i = path.length - 1; i > 0; i--) {

@@ -1,24 +1,24 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity =0.6.12;
 
-import "./libraries/SolarLibrary.sol";
+import "./libraries/GeosLibrary.sol";
 import "./libraries/SafeMath.sol";
 import "./libraries/TransferHelper.sol";
-import "./interfaces/ISolarRouter02.sol";
-import "./interfaces/ISolarFactory.sol";
+import "./interfaces/IGeosRouter02.sol";
+import "./interfaces/IGeosFactory.sol";
 import "./interfaces/IERC20.sol";
 import "./interfaces/IWETH.sol";
 
 import "hardhat/console.sol";
 
-contract Router02 is ISolarRouter02 {
-    using SafeMathSolar for uint256;
+contract Router02 is IGeosRouter02 {
+    using SafeMathGeos for uint256;
 
     address public immutable override factory;
     address public immutable override WETH;
 
     modifier ensure(uint256 deadline) {
-        require(deadline >= block.timestamp, "SolarRouter: EXPIRED");
+        require(deadline >= block.timestamp, "GeosRouter: EXPIRED");
         _;
     }
 
@@ -41,10 +41,10 @@ contract Router02 is ISolarRouter02 {
         uint256 amountBMin
     ) internal virtual returns (uint256 amountA, uint256 amountB) {
         // create the pair if it doesn't exist yet
-        if (ISolarFactory(factory).getPair(tokenA, tokenB) == address(0)) {
-            ISolarFactory(factory).createPair(tokenA, tokenB);
+        if (IGeosFactory(factory).getPair(tokenA, tokenB) == address(0)) {
+            IGeosFactory(factory).createPair(tokenA, tokenB);
         }
-        (uint256 reserveA, uint256 reserveB) = SolarLibrary.getReserves(
+        (uint256 reserveA, uint256 reserveB) = GeosLibrary.getReserves(
             factory,
             tokenA,
             tokenB
@@ -52,7 +52,7 @@ contract Router02 is ISolarRouter02 {
         if (reserveA == 0 && reserveB == 0) {
             (amountA, amountB) = (amountADesired, amountBDesired);
         } else {
-            uint256 amountBOptimal = SolarLibrary.quote(
+            uint256 amountBOptimal = GeosLibrary.quote(
                 amountADesired,
                 reserveA,
                 reserveB
@@ -60,11 +60,11 @@ contract Router02 is ISolarRouter02 {
             if (amountBOptimal <= amountBDesired) {
                 require(
                     amountBOptimal >= amountBMin,
-                    "SolarRouter: INSUFFICIENT_B_AMOUNT"
+                    "GeosRouter: INSUFFICIENT_B_AMOUNT"
                 );
                 (amountA, amountB) = (amountADesired, amountBOptimal);
             } else {
-                uint256 amountAOptimal = SolarLibrary.quote(
+                uint256 amountAOptimal = GeosLibrary.quote(
                     amountBDesired,
                     reserveB,
                     reserveA
@@ -72,7 +72,7 @@ contract Router02 is ISolarRouter02 {
                 assert(amountAOptimal <= amountADesired);
                 require(
                     amountAOptimal >= amountAMin,
-                    "SolarRouter: INSUFFICIENT_A_AMOUNT"
+                    "GeosRouter: INSUFFICIENT_A_AMOUNT"
                 );
                 (amountA, amountB) = (amountAOptimal, amountBDesired);
             }
@@ -107,10 +107,10 @@ contract Router02 is ISolarRouter02 {
             amountAMin,
             amountBMin
         );
-        address pair = SolarLibrary.pairFor(factory, tokenA, tokenB);
+        address pair = GeosLibrary.pairFor(factory, tokenA, tokenB);
         TransferHelper.safeTransferFrom(tokenA, msg.sender, pair, amountA);
         TransferHelper.safeTransferFrom(tokenB, msg.sender, pair, amountB);
-        liquidity = ISolarPair(pair).mint(to);
+        liquidity = IGeosPair(pair).mint(to);
     }
 
     function addLiquidityETH(
@@ -140,11 +140,11 @@ contract Router02 is ISolarRouter02 {
             amountTokenMin,
             amountETHMin
         );
-        address pair = SolarLibrary.pairFor(factory, token, WETH);
+        address pair = GeosLibrary.pairFor(factory, token, WETH);
         TransferHelper.safeTransferFrom(token, msg.sender, pair, amountToken);
         IWETH(WETH).deposit{value: amountETH}();
         assert(IWETH(WETH).transfer(pair, amountETH));
-        liquidity = ISolarPair(pair).mint(to);
+        liquidity = IGeosPair(pair).mint(to);
         // refund dust eth, if any
         if (msg.value > amountETH)
             TransferHelper.safeTransferETH(msg.sender, msg.value - amountETH);
@@ -166,15 +166,15 @@ contract Router02 is ISolarRouter02 {
         ensure(deadline)
         returns (uint256 amountA, uint256 amountB)
     {
-        address pair = SolarLibrary.pairFor(factory, tokenA, tokenB);
-        ISolarPair(pair).transferFrom(msg.sender, pair, liquidity); // send liquidity to pair
-        (uint256 amount0, uint256 amount1) = ISolarPair(pair).burn(to);
-        (address token0, ) = SolarLibrary.sortTokens(tokenA, tokenB);
+        address pair = GeosLibrary.pairFor(factory, tokenA, tokenB);
+        IGeosPair(pair).transferFrom(msg.sender, pair, liquidity); // send liquidity to pair
+        (uint256 amount0, uint256 amount1) = IGeosPair(pair).burn(to);
+        (address token0, ) = GeosLibrary.sortTokens(tokenA, tokenB);
         (amountA, amountB) = tokenA == token0
             ? (amount0, amount1)
             : (amount1, amount0);
-        require(amountA >= amountAMin, "SolarRouter: INSUFFICIENT_A_AMOUNT");
-        require(amountB >= amountBMin, "SolarRouter: INSUFFICIENT_B_AMOUNT");
+        require(amountA >= amountAMin, "GeosRouter: INSUFFICIENT_A_AMOUNT");
+        require(amountB >= amountBMin, "GeosRouter: INSUFFICIENT_B_AMOUNT");
     }
 
     function removeLiquidityETH(
@@ -218,9 +218,9 @@ contract Router02 is ISolarRouter02 {
         bytes32 r,
         bytes32 s
     ) external virtual override returns (uint256 amountA, uint256 amountB) {
-        address pair = SolarLibrary.pairFor(factory, tokenA, tokenB);
+        address pair = GeosLibrary.pairFor(factory, tokenA, tokenB);
         uint256 value = approveMax ? uint256(-1) : liquidity;
-        ISolarPair(pair).permit(
+        IGeosPair(pair).permit(
             msg.sender,
             address(this),
             value,
@@ -257,9 +257,9 @@ contract Router02 is ISolarRouter02 {
         override
         returns (uint256 amountToken, uint256 amountETH)
     {
-        address pair = SolarLibrary.pairFor(factory, token, WETH);
+        address pair = GeosLibrary.pairFor(factory, token, WETH);
         uint256 value = approveMax ? uint256(-1) : liquidity;
-        ISolarPair(pair).permit(
+        IGeosPair(pair).permit(
             msg.sender,
             address(this),
             value,
@@ -299,7 +299,7 @@ contract Router02 is ISolarRouter02 {
         TransferHelper.safeTransfer(
             token,
             to,
-            IERC20Solar(token).balanceOf(address(this))
+            IERC20Geos(token).balanceOf(address(this))
         );
         IWETH(WETH).withdraw(amountETH);
         TransferHelper.safeTransferETH(to, amountETH);
@@ -317,9 +317,9 @@ contract Router02 is ISolarRouter02 {
         bytes32 r,
         bytes32 s
     ) external virtual override returns (uint256 amountETH) {
-        address pair = SolarLibrary.pairFor(factory, token, WETH);
+        address pair = GeosLibrary.pairFor(factory, token, WETH);
         uint256 value = approveMax ? uint256(-1) : liquidity;
-        ISolarPair(pair).permit(
+        IGeosPair(pair).permit(
             msg.sender,
             address(this),
             value,
@@ -347,15 +347,15 @@ contract Router02 is ISolarRouter02 {
     ) internal virtual {
         for (uint256 i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
-            (address token0, ) = SolarLibrary.sortTokens(input, output);
+            (address token0, ) = GeosLibrary.sortTokens(input, output);
             uint256 amountOut = amounts[i + 1];
             (uint256 amount0Out, uint256 amount1Out) = input == token0
                 ? (uint256(0), amountOut)
                 : (amountOut, uint256(0));
             address to = i < path.length - 2
-                ? SolarLibrary.pairFor(factory, output, path[i + 2])
+                ? GeosLibrary.pairFor(factory, output, path[i + 2])
                 : _to;
-            ISolarPair(SolarLibrary.pairFor(factory, input, output)).swap(
+            IGeosPair(GeosLibrary.pairFor(factory, input, output)).swap(
                 amount0Out,
                 amount1Out,
                 to,
@@ -377,15 +377,15 @@ contract Router02 is ISolarRouter02 {
         ensure(deadline)
         returns (uint256[] memory amounts)
     {
-        amounts = SolarLibrary.getAmountsOut(factory, amountIn, path);
+        amounts = GeosLibrary.getAmountsOut(factory, amountIn, path);
         require(
             amounts[amounts.length - 1] >= amountOutMin,
-            "SolarRouter: INSUFFICIENT_OUTPUT_AMOUNT"
+            "GeosRouter: INSUFFICIENT_OUTPUT_AMOUNT"
         );
         TransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
-            SolarLibrary.pairFor(factory, path[0], path[1]),
+            GeosLibrary.pairFor(factory, path[0], path[1]),
             amounts[0]
         );
         _swap(amounts, path, to);
@@ -404,15 +404,15 @@ contract Router02 is ISolarRouter02 {
         ensure(deadline)
         returns (uint256[] memory amounts)
     {
-        amounts = SolarLibrary.getAmountsIn(factory, amountOut, path);
+        amounts = GeosLibrary.getAmountsIn(factory, amountOut, path);
         require(
             amounts[0] <= amountInMax,
-            "SolarRouter: EXCESSIVE_INPUT_AMOUNT"
+            "GeosRouter: EXCESSIVE_INPUT_AMOUNT"
         );
         TransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
-            SolarLibrary.pairFor(factory, path[0], path[1]),
+            GeosLibrary.pairFor(factory, path[0], path[1]),
             amounts[0]
         );
         _swap(amounts, path, to);
@@ -431,16 +431,16 @@ contract Router02 is ISolarRouter02 {
         ensure(deadline)
         returns (uint256[] memory amounts)
     {
-        require(path[0] == WETH, "SolarRouter: INVALID_PATH");
-        amounts = SolarLibrary.getAmountsOut(factory, msg.value, path);
+        require(path[0] == WETH, "GeosRouter: INVALID_PATH");
+        amounts = GeosLibrary.getAmountsOut(factory, msg.value, path);
         require(
             amounts[amounts.length - 1] >= amountOutMin,
-            "SolarRouter: INSUFFICIENT_OUTPUT_AMOUNT"
+            "GeosRouter: INSUFFICIENT_OUTPUT_AMOUNT"
         );
         IWETH(WETH).deposit{value: amounts[0]}();
         assert(
             IWETH(WETH).transfer(
-                SolarLibrary.pairFor(factory, path[0], path[1]),
+                GeosLibrary.pairFor(factory, path[0], path[1]),
                 amounts[0]
             )
         );
@@ -460,16 +460,16 @@ contract Router02 is ISolarRouter02 {
         ensure(deadline)
         returns (uint256[] memory amounts)
     {
-        require(path[path.length - 1] == WETH, "SolarRouter: INVALID_PATH");
-        amounts = SolarLibrary.getAmountsIn(factory, amountOut, path);
+        require(path[path.length - 1] == WETH, "GeosRouter: INVALID_PATH");
+        amounts = GeosLibrary.getAmountsIn(factory, amountOut, path);
         require(
             amounts[0] <= amountInMax,
-            "SolarRouter: EXCESSIVE_INPUT_AMOUNT"
+            "GeosRouter: EXCESSIVE_INPUT_AMOUNT"
         );
         TransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
-            SolarLibrary.pairFor(factory, path[0], path[1]),
+            GeosLibrary.pairFor(factory, path[0], path[1]),
             amounts[0]
         );
         _swap(amounts, path, address(this));
@@ -490,16 +490,16 @@ contract Router02 is ISolarRouter02 {
         ensure(deadline)
         returns (uint256[] memory amounts)
     {
-        require(path[path.length - 1] == WETH, "SolarRouter: INVALID_PATH");
-        amounts = SolarLibrary.getAmountsOut(factory, amountIn, path);
+        require(path[path.length - 1] == WETH, "GeosRouter: INVALID_PATH");
+        amounts = GeosLibrary.getAmountsOut(factory, amountIn, path);
         require(
             amounts[amounts.length - 1] >= amountOutMin,
-            "SolarRouter: INSUFFICIENT_OUTPUT_AMOUNT"
+            "GeosRouter: INSUFFICIENT_OUTPUT_AMOUNT"
         );
         TransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
-            SolarLibrary.pairFor(factory, path[0], path[1]),
+            GeosLibrary.pairFor(factory, path[0], path[1]),
             amounts[0]
         );
         _swap(amounts, path, address(this));
@@ -520,13 +520,13 @@ contract Router02 is ISolarRouter02 {
         ensure(deadline)
         returns (uint256[] memory amounts)
     {
-        require(path[0] == WETH, "SolarRouter: INVALID_PATH");
-        amounts = SolarLibrary.getAmountsIn(factory, amountOut, path);
-        require(amounts[0] <= msg.value, "SolarRouter: EXCESSIVE_INPUT_AMOUNT");
+        require(path[0] == WETH, "GeosRouter: INVALID_PATH");
+        amounts = GeosLibrary.getAmountsIn(factory, amountOut, path);
+        require(amounts[0] <= msg.value, "GeosRouter: EXCESSIVE_INPUT_AMOUNT");
         IWETH(WETH).deposit{value: amounts[0]}();
         assert(
             IWETH(WETH).transfer(
-                SolarLibrary.pairFor(factory, path[0], path[1]),
+                GeosLibrary.pairFor(factory, path[0], path[1]),
                 amounts[0]
             )
         );
@@ -535,6 +535,7 @@ contract Router02 is ISolarRouter02 {
         if (msg.value > amounts[0])
             TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]);
     }
+
     /*
     // **** SWAP (supporting fee-on-transfer tokens) ****
     // requires the initial amount to have already been sent to the first pair
@@ -544,9 +545,9 @@ contract Router02 is ISolarRouter02 {
     ) internal virtual {
         for (uint256 i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
-            (address token0, ) = SolarLibrary.sortTokens(input, output);
-            ISolarPair pair = ISolarPair(
-                SolarLibrary.pairFor(factory, input, output)
+            (address token0, ) = GeosLibrary.sortTokens(input, output);
+            IGeosPair pair = IGeosPair(
+                GeosLibrary.pairFor(factory, input, output)
             );
             uint256 amountInput;
             uint256 amountOutput;
@@ -557,10 +558,10 @@ contract Router02 is ISolarRouter02 {
                 (uint256 reserveInput, uint256 reserveOutput) = input == token0
                     ? (reserve0, reserve1)
                     : (reserve1, reserve0);
-                amountInput = IERC20Solar(input).balanceOf(address(pair)).sub(
+                amountInput = IERC20Geos(input).balanceOf(address(pair)).sub(
                     reserveInput
                 );
-                amountOutput = SolarLibrary.getAmountOut(
+                amountOutput = GeosLibrary.getAmountOut(
                     amountInput,
                     reserveInput,
                     reserveOutput
@@ -571,7 +572,7 @@ contract Router02 is ISolarRouter02 {
                 ? (uint256(0), amountOutput)
                 : (amountOutput, uint256(0));
             address to = i < path.length - 2
-                ? SolarLibrary.pairFor(factory, output, path[i + 2])
+                ? GeosLibrary.pairFor(factory, output, path[i + 2])
                 : _to;
             pair.swap(amount0Out, amount1Out, to, new bytes(0));
         }
@@ -587,18 +588,18 @@ contract Router02 is ISolarRouter02 {
         TransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
-            SolarLibrary.pairFor(factory, path[0], path[1]),
+            GeosLibrary.pairFor(factory, path[0], path[1]),
             amountIn
         );
-        uint256 balanceBefore = IERC20Solar(path[path.length - 1]).balanceOf(
+        uint256 balanceBefore = IERC20Geos(path[path.length - 1]).balanceOf(
             to
         );
         _swapSupportingFeeOnTransferTokens(path, to);
         require(
-            IERC20Solar(path[path.length - 1]).balanceOf(to).sub(
+            IERC20Geos(path[path.length - 1]).balanceOf(to).sub(
                 balanceBefore
             ) >= amountOutMin,
-            "SolarRouter: INSUFFICIENT_OUTPUT_AMOUNT"
+            "GeosRouter: INSUFFICIENT_OUTPUT_AMOUNT"
         );
     }
 
@@ -608,24 +609,24 @@ contract Router02 is ISolarRouter02 {
         address to,
         uint256 deadline
     ) external payable virtual override ensure(deadline) {
-        require(path[0] == WETH, "SolarRouter: INVALID_PATH");
+        require(path[0] == WETH, "GeosRouter: INVALID_PATH");
         uint256 amountIn = msg.value;
         IWETH(WETH).deposit{value: amountIn}();
         assert(
             IWETH(WETH).transfer(
-                SolarLibrary.pairFor(factory, path[0], path[1]),
+                GeosLibrary.pairFor(factory, path[0], path[1]),
                 amountIn
             )
         );
-        uint256 balanceBefore = IERC20Solar(path[path.length - 1]).balanceOf(
+        uint256 balanceBefore = IERC20Geos(path[path.length - 1]).balanceOf(
             to
         );
         _swapSupportingFeeOnTransferTokens(path, to);
         require(
-            IERC20Solar(path[path.length - 1]).balanceOf(to).sub(
+            IERC20Geos(path[path.length - 1]).balanceOf(to).sub(
                 balanceBefore
             ) >= amountOutMin,
-            "SolarRouter: INSUFFICIENT_OUTPUT_AMOUNT"
+            "GeosRouter: INSUFFICIENT_OUTPUT_AMOUNT"
         );
     }
 
@@ -636,18 +637,18 @@ contract Router02 is ISolarRouter02 {
         address to,
         uint256 deadline
     ) external virtual override ensure(deadline) {
-        require(path[path.length - 1] == WETH, "SolarRouter: INVALID_PATH");
+        require(path[path.length - 1] == WETH, "GeosRouter: INVALID_PATH");
         TransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
-            SolarLibrary.pairFor(factory, path[0], path[1]),
+            GeosLibrary.pairFor(factory, path[0], path[1]),
             amountIn
         );
         _swapSupportingFeeOnTransferTokens(path, address(this));
-        uint256 amountOut = IERC20Solar(WETH).balanceOf(address(this));
+        uint256 amountOut = IERC20Geos(WETH).balanceOf(address(this));
         require(
             amountOut >= amountOutMin,
-            "SolarRouter: INSUFFICIENT_OUTPUT_AMOUNT"
+            "GeosRouter: INSUFFICIENT_OUTPUT_AMOUNT"
         );
         IWETH(WETH).withdraw(amountOut);
         TransferHelper.safeTransferETH(to, amountOut);
@@ -659,7 +660,7 @@ contract Router02 is ISolarRouter02 {
         uint256 reserveA,
         uint256 reserveB
     ) public pure virtual override returns (uint256 amountB) {
-        return SolarLibrary.quote(amountA, reserveA, reserveB);
+        return GeosLibrary.quote(amountA, reserveA, reserveB);
     }
 
     function getAmountOut(
@@ -667,7 +668,7 @@ contract Router02 is ISolarRouter02 {
         uint256 reserveIn,
         uint256 reserveOut
     ) public pure virtual override returns (uint256 amountOut) {
-        return SolarLibrary.getAmountOut(amountIn, reserveIn, reserveOut);
+        return GeosLibrary.getAmountOut(amountIn, reserveIn, reserveOut);
     }
 
     function getAmountIn(
@@ -675,7 +676,7 @@ contract Router02 is ISolarRouter02 {
         uint256 reserveIn,
         uint256 reserveOut
     ) public pure virtual override returns (uint256 amountIn) {
-        return SolarLibrary.getAmountIn(amountOut, reserveIn, reserveOut);
+        return GeosLibrary.getAmountIn(amountOut, reserveIn, reserveOut);
     }
 
     function getAmountsOut(uint256 amountIn, address[] memory path)
@@ -685,7 +686,7 @@ contract Router02 is ISolarRouter02 {
         override
         returns (uint256[] memory amounts)
     {
-        return SolarLibrary.getAmountsOut(factory, amountIn, path);
+        return GeosLibrary.getAmountsOut(factory, amountIn, path);
     }
 
     function getAmountsIn(uint256 amountOut, address[] memory path)
@@ -695,6 +696,6 @@ contract Router02 is ISolarRouter02 {
         override
         returns (uint256[] memory amounts)
     {
-        return SolarLibrary.getAmountsIn(factory, amountOut, path);
+        return GeosLibrary.getAmountsIn(factory, amountOut, path);
     }
 }

@@ -1,8 +1,8 @@
 pragma solidity ^0.6.12;
 
 import "./interfaces/ILiquidityValueCalculator.sol";
-import "./libraries/SolarLibrary.sol";
-import "./interfaces/ISolarPair.sol";
+import "./libraries/GeosLibrary.sol";
+import "./interfaces/IGeosPair.sol";
 
 contract LiquidityValueCalculator is ILiquidityValueCalculator {
     address public factory;
@@ -20,8 +20,8 @@ contract LiquidityValueCalculator is ILiquidityValueCalculator {
             uint256 totalSupply
         )
     {
-        ISolarPair pair = ISolarPair(
-            SolarLibrary.pairFor(factory, tokenA, tokenB)
+        IGeosPair pair = IGeosPair(
+            GeosLibrary.pairFor(factory, tokenA, tokenB)
         );
         totalSupply = pair.totalSupply();
         (uint256 reserves0, uint256 reserves1, ) = pair.getReserves();
