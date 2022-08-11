@@ -33,15 +33,18 @@ let wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 const { abi: usdcABI } = require("../abi/USDC.json");
 const { abi: usdtABI } = require("../abi/USDT.json");
 const { abi: wethABI } = require("../abi/WETH.json");
+const { abi: daiABI } = require("../abi/DAI.json");
 
 const usdcAddress = "0xd4e90eb2715e7E1849480c674b9C11e5A78Af403";
 const usdtAddress = "0x557a9Ccb11c4E147e011631050DDF8F9F0621cEE";
 const wethAddress = "0xa8FE53e9A816EA38B20b42f10F09906e6DcaC46a";
+const daiAddress = "0x5dE339c78f6099502b4450b3BFa4bD82E5a13d1E";
 const routerAddress = "0xcEC6Cc2534e9b12978121717f8dC2cA4F531ac76";
 
 const USDC = new ethers.Contract(usdcAddress, usdcABI, wallet);
 const USDT = new ethers.Contract(usdtAddress, usdtABI, wallet);
 const WETH = new ethers.Contract(wethAddress, wethABI, wallet);
+const DAI = new ethers.Contract(daiAddress, daiABI, wallet);
 
 const getInfo = async () => {
   console.log();
@@ -122,13 +125,21 @@ const approveWETH = async () => {
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
+const approveDAI = async () => {
+  const createReceipt = await DAI.approve(routerAddress, amount);
+  await createReceipt.wait();
+
+  console.log(`Tx successful with hash: ${createReceipt.hash}`);
+};
+
 (async () => {
   try {
     await getBalance();
     // await getInfo();
-    await approveUSDC();
-    await approveUSDT();
-    await approveWETH();
+    // await approveUSDC();
+    // await approveUSDT();
+    // await approveWETH();
+    await approveDAI();
   } catch (error) {
     console.log(error);
   }

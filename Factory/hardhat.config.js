@@ -15,6 +15,11 @@ module.exports = {
       url: "https://rpc.api.moonbase.moonbeam.network",
       accounts: [process.env.PRIVATE_KEY],
       chainId: 1287,
+      // blockGasLimit: 100000000429720,
+      // gasLimit: 100_000_000_000_000,
+      // allowUnlimitedContractSize: true,
+      // gas: 2100000,
+      // gasPrice: 8000000000,
     },
     // dev: {
     //   url: "http://127.0.0.1:9933",
@@ -42,7 +47,7 @@ module.exports = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200,
+            runs: 1000,
           },
         },
       },
@@ -51,7 +56,7 @@ module.exports = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200,
+            runs: 1000,
           },
         },
       },

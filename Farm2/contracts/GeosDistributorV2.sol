@@ -36,7 +36,7 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
 
     uint256 public mintedGeos;
 
-    // Solar tokens created per second
+    // Geos tokens created per second
     uint256 public geosPerSec;
 
     // Max harvest interval: 14 days
@@ -56,13 +56,13 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
     // Total allocation points. Must be the sum of all allocation points in all pools.
     uint256 public totalAllocPoint = 0;
 
-    // The timestamp when Solar mining starts.
+    // The timestamp when Geos mining starts.
     uint256 public startTimestamp;
 
     // Total locked up rewards
     uint256 public totalLockedUpRewards;
 
-    // Total Solar in Solar Pools (can be multiple pools)
+    // Total Geos in Geos Pools (can be multiple pools)
     uint256 public totalGeosInPools = 0;
 
     // Team address.
@@ -278,7 +278,7 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         );
     }
 
-    // Update the given pool's Solar allocation point and deposit fee. Can only be called by the owner.
+    // Update the given pool's Geos allocation point and deposit fee. Can only be called by the owner.
     function set(
         uint256 _pid,
         uint256 _allocPoint,
@@ -400,7 +400,7 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
 
     }
 
-    // View function to see if user can harvest Solar.
+    // View function to see if user can harvest Geos.
     function canHarvest(uint256 _pid, address _user)
         public
         view
@@ -485,17 +485,17 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
     //     bytes32 s
     // ) public nonReentrant validatePoolByPid(pid) {
     //     PoolInfo storage pool = poolInfo[pid];
-    //     ISolarPair pair = ISolarPair(address(pool.lpToken));
+    //     IGeosPair pair = IGeosPair(address(pool.lpToken));
     //     pair.permit(msg.sender, address(this), amount, deadline, v, r, s);
     //     _deposit(pid, amount);
     // }
 
-    // Deposit tokens for Solar allocation.
+    // Deposit tokens for Geos allocation.
     function deposit(uint256 _pid, uint256 _amount) public nonReentrant {
         _deposit(_pid, _amount);
     }
 
-    // Deposit tokens for Solar allocation.
+    // Deposit tokens for Geos allocation.
     function _deposit(uint256 _pid, uint256 _amount)
         internal
         validatePoolByPid(_pid)
@@ -607,7 +607,7 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         emit EmergencyWithdraw(msg.sender, _pid, amount);
     }
 
-    // Pay or lockup pending Solar.
+    // Pay or lockup pending Geos.
     function payOrLockupPendingGeos(uint256 _pid) internal {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
@@ -638,10 +638,10 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
         }
     }
 
-    // Safe Solar transfer function, just in case if rounding error causes pool do not have enough Solar.
+    // Safe Geos transfer function, just in case if rounding error causes pool do not have enough Geos.
     function safeSolarTransfer(address _to, uint256 _amount) internal {
         if (geos.balanceOf(address(this)) > totalGeosInPools) {
-            //geosBal = total Solar in SolarDistributor - total Solar in Solar pools, this will make sure that SolarDistributor never transfer rewards from deposited Solar pools
+            //geosBal = total Geos in GeosDistributor - total Geos in Geos pools, this will make sure that GeosDistributor never transfer rewards from deposited Geos pools
             uint256 geosBal = geos.balanceOf(address(this)) -
                 totalGeosInPools;
             if (_amount >= geosBal) {
