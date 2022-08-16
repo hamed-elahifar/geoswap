@@ -1,5 +1,5 @@
 {
-  "address": "0x51cbe251A48B82582052e5e4c1028300d742900d",
+  "address": "0x284c869e711206b91d5F8426bbEedC27EBf98579",
   "abi": [
     {
       "type": "constructor",
@@ -382,6 +382,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -395,6 +396,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -407,6 +409,7 @@
       "name": "add",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -433,6 +436,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -454,6 +458,7 @@
       "name": "deposit",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -471,6 +476,7 @@
       "name": "emergencyWithdraw",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -485,6 +491,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -498,6 +505,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -510,6 +518,7 @@
       "name": "harvestMany",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256[]",
@@ -524,6 +533,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -537,6 +547,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -549,6 +560,7 @@
       "name": "massUpdatePools",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": []
     },
@@ -558,6 +570,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -571,6 +584,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -584,6 +598,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -619,6 +634,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256"
@@ -661,6 +677,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -674,6 +691,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -705,6 +723,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -722,6 +741,7 @@
       "name": "renounceOwnership",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": []
     },
@@ -730,6 +750,7 @@
       "name": "set",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -755,6 +776,7 @@
       "name": "setInvestorAddress",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "address",
@@ -768,6 +790,7 @@
       "name": "setInvestorPercent",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -781,6 +804,7 @@
       "name": "setTeamAddress",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "address",
@@ -794,6 +818,7 @@
       "name": "setTeamPercent",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -807,6 +832,7 @@
       "name": "setTreasuryAddress",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "address",
@@ -820,6 +846,7 @@
       "name": "setTreasuryPercent",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -833,6 +860,7 @@
       "name": "startFarming",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": []
     },
@@ -842,6 +870,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -855,6 +884,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -868,6 +898,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -881,6 +912,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -894,6 +926,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -907,6 +940,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -919,6 +953,7 @@
       "name": "transferOwnership",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "address",
@@ -933,6 +968,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -946,6 +982,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [],
       "outputs": [
         {
@@ -958,6 +995,7 @@
       "name": "updateAllocPoint",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -975,6 +1013,7 @@
       "name": "updateEmissionRate",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -988,6 +1027,7 @@
       "name": "updatePool",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",
@@ -1002,6 +1042,7 @@
       "constant": true,
       "stateMutability": "view",
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256"
@@ -1034,6 +1075,7 @@
       "name": "withdraw",
       "constant": false,
       "payable": false,
+      "gas": 999999000000,
       "inputs": [
         {
           "type": "uint256",

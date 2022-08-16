@@ -2,7 +2,7 @@ console.clear();
 require("dotenv").config();
 const ethers = require("ethers");
 
-const providerRPC = {
+const moonbaseProviderRPC = {
   moonbase: {
     name: "moonbase-alpha",
     rpc: "https://rpc.api.moonbase.moonbeam.network",
@@ -13,6 +13,21 @@ const providerRPC = {
     gasPrice: 8000000000,
   },
 };
+
+const binanceProviderRPC = {
+  moonbase: {
+    name: "binance-test",
+    rpc: "https://data-seed-prebsc-1-s1.binance.org:8545",
+    chainId: 97,
+    // gasLimit: 100_000_000_000_000,
+    // allowUnlimitedContractSize: true,
+    // gas: 2100000,
+    // gasPrice: 8000000000,
+  },
+};
+
+const providerRPC = binanceProviderRPC;
+
 // ethers provider
 const provider = new ethers.providers.StaticJsonRpcProvider(
   providerRPC.moonbase.rpc,
@@ -22,7 +37,7 @@ const provider = new ethers.providers.StaticJsonRpcProvider(
   }
 );
 
-const ownerAddress = "0x2AA9EA82AD7aC507401c652086584aE729A24C6D";
+const ownerAddress = "0xfDe2b8b5fb8B03CB4eCc92791D67002D54B821Ad";
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 // Get balance
@@ -42,11 +57,16 @@ const getProviderInfo = async () => {
   console.log("Provider Gas Limit", +latestBlock.gasLimit);
 };
 
+const getNonce = async () => {
+  const nonce = await provider.getTransactionCount(ownerAddress);
+  console.log("Nonce is", nonce);
+};
+
 const { abi: routerABI } = require("../abi/router.json");
 const { abi: factoryABI } = require("../abi/factory.json");
 
-const routerAddress = "0xcEC6Cc2534e9b12978121717f8dC2cA4F531ac76";
-const factoryAddress = "0x34101eDF6d2CF5FCBD03870c6524FcaD8e8f8587";
+const routerAddress = "0xE9E1d9A3F08CBeb9850bE90d1687D4d042d76eCF";
+const factoryAddress = "0x598676d69072862D508b01a039B4bcE9A774f7Df";
 
 const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 
@@ -61,10 +81,10 @@ const getInfo = async () => {
   console.log(`factory address is: ${factory}`);
 };
 
-const USDC = "0xd4e90eb2715e7E1849480c674b9C11e5A78Af403";
-const USDT = "0x557a9Ccb11c4E147e011631050DDF8F9F0621cEE";
-const WETH = "0xa8FE53e9A816EA38B20b42f10F09906e6DcaC46a";
-const DAI = "0x5dE339c78f6099502b4450b3BFa4bD82E5a13d1E";
+const USDC = "0xF572DF8281E109e014db8A3144A7a87512ba6820";
+const USDT = "0xeE281CE1A7890Cb84a3eF3cfdfE357D703b7F47d";
+const WETH = "0xF10D64Ff2d96234a7Fb01b55bDb2D39b610473fa";
+const DAI = "0xd1145BAC492f1516FeABd6FA8AC63AE291630b24";
 
 const addLiquidityA = async () => {
   const createReceipt = await router.addLiquidity(
@@ -77,8 +97,9 @@ const addLiquidityA = async () => {
     ownerAddress, // address to,
     Math.floor(Date.now() / 1000) + 60 * 10, // uint256 deadline
     {
-      gasPrice: ethers.utils.parseUnits("100", "gwei"),
+      gasPrice: ethers.utils.parseUnits("10", "gwei"),
       gasLimit: 1_000_000,
+      from: ownerAddress,
     }
   );
   await createReceipt.wait();
@@ -153,12 +174,13 @@ const getPair = async (tokenA, tokenB) => {
     await getBalance();
     await getProviderInfo();
     await getInfo();
-    // await addLiquidityA();
+    await getNonce();
+    await addLiquidityA();
     // await addLiquidityB();
-    await addLiquidityC();
-    await getAllPairsLength();
-    await allPairs();
-    await getPair(USDC, USDT);
+    // await addLiquidityC();
+    // await getAllPairsLength();
+    // await allPairs();
+    // await getPair(USDC, USDT);
   } catch (error) {
     console.log(error);
   }

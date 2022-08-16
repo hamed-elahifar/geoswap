@@ -39,6 +39,11 @@ module.exports = {
       network_id: "3",
       chainId: 3,
     },
+    binance: {
+      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 97,
+    },
   },
   solidity: {
     compilers: [

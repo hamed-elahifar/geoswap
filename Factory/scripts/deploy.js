@@ -6,19 +6,19 @@ async function deploy() {
   const deployerAddress = account.address;
   console.log(`Deploying contracts using ${deployerAddress}`);
 
-  // Deploy WETH
-  const weth = await ethers.getContractFactory("WETH");
-  const wethInstance = await weth.deploy();
-  await wethInstance.deployed();
+  // // Deploy WETH
+  // const weth = await ethers.getContractFactory("WETH");
+  // const wethInstance = await weth.deploy();
+  // await wethInstance.deployed();
 
-  console.log(`WETH deployed to : ${wethInstance.address}`);
+  // console.log(`WETH deployed to : ${wethInstance.address}`);
 
-  const wethData = {
-    address: wethInstance.address,
-    abi: JSON.parse(wethInstance.interface.format("json")),
-  };
+  // const wethData = {
+  //   address: wethInstance.address,
+  //   abi: JSON.parse(wethInstance.interface.format("json")),
+  // };
 
-  fs.writeFileSync("abi/WETH.json", JSON.stringify(wethData, null, 2));
+  // fs.writeFileSync("abi/WETH.json", JSON.stringify(wethData, null, 2));
 
   // Deploy Factory
   const factory = await ethers.getContractFactory("GeosFactory");
@@ -38,7 +38,7 @@ async function deploy() {
   const router = await ethers.getContractFactory("Router02");
   const routerInstance = await router.deploy(
     factoryInstance.address,
-    wethInstance.address
+    "0xF10D64Ff2d96234a7Fb01b55bDb2D39b610473fa" //wethInstance.address
   );
   await routerInstance.deployed();
 

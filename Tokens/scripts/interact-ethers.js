@@ -17,7 +17,7 @@ const provider = new ethers.providers.StaticJsonRpcProvider(
   }
 );
 
-const ownerAddress = "0x2AA9EA82AD7aC507401c652086584aE729A24C6D";
+const ownerAddress = "0xfDe2b8b5fb8B03CB4eCc92791D67002D54B821Ad";
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 // Get balance
@@ -35,11 +35,11 @@ const { abi: usdtABI } = require("../abi/USDT.json");
 const { abi: wethABI } = require("../abi/WETH.json");
 const { abi: daiABI } = require("../abi/DAI.json");
 
-const usdcAddress = "0xd4e90eb2715e7E1849480c674b9C11e5A78Af403";
-const usdtAddress = "0x557a9Ccb11c4E147e011631050DDF8F9F0621cEE";
-const wethAddress = "0xa8FE53e9A816EA38B20b42f10F09906e6DcaC46a";
-const daiAddress = "0x5dE339c78f6099502b4450b3BFa4bD82E5a13d1E";
-const routerAddress = "0xcEC6Cc2534e9b12978121717f8dC2cA4F531ac76";
+const usdcAddress = "0xd1145BAC492f1516FeABd6FA8AC63AE291630b24";
+const usdtAddress = "0xeE281CE1A7890Cb84a3eF3cfdfE357D703b7F47d";
+const wethAddress = "0xF10D64Ff2d96234a7Fb01b55bDb2D39b610473fa";
+const daiAddress = "0xF572DF8281E109e014db8A3144A7a87512ba6820";
+const routerAddress = "0xE9E1d9A3F08CBeb9850bE90d1687D4d042d76eCF";
 
 const USDC = new ethers.Contract(usdcAddress, usdcABI, wallet);
 const USDT = new ethers.Contract(usdtAddress, usdtABI, wallet);
@@ -135,10 +135,10 @@ const approveDAI = async () => {
 (async () => {
   try {
     await getBalance();
-    // await getInfo();
-    // await approveUSDC();
-    // await approveUSDT();
-    // await approveWETH();
+    await getInfo();
+    await approveUSDC();
+    await approveUSDT();
+    await approveWETH();
     await approveDAI();
   } catch (error) {
     console.log(error);
