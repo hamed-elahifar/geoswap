@@ -1,23 +1,23 @@
-require("dotenv").config();
+const path = require("path");
+const configFile = path.resolve(
+  process.cwd(),
+  "..",
+  `.env.${process.env.NODE_ENV}`
+);
+require("dotenv").config({ path: configFile });
+
 const ethers = require("ethers");
 
-const providerRPC = {
-  moonbase: {
-    name: "moonbase-alpha",
-    rpc: "https://rpc.api.moonbase.moonbeam.network",
-    chainId: 1287, // 0x507 in hex,
-  },
-};
-// ethers provider
 const provider = new ethers.providers.StaticJsonRpcProvider(
-  providerRPC.moonbase.rpc,
+  process.env.PROVIDER_RPC,
   {
-    chainId: providerRPC.moonbase.chainId,
-    name: providerRPC.moonbase.name,
+    chainId: +process.env.CHAIN_ID,
+    name: process.env.PROVIDER_NAME,
+    // allowUnlimitedContractSize: true, // not sure if this should be here
   }
 );
 
-const ownerAddress = "0x2AA9EA82AD7aC507401c652086584aE729A24C6D";
+const ownerAddress = process.env.OWNER_ADDRESS;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 // Get balance

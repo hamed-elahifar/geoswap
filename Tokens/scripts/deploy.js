@@ -14,7 +14,11 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await sleep(sleepDuration);
   console.log();
 
-  // require("./deploy-WETH");
-  // await sleep(sleepDuration);
-  // console.log();
+  require("./deploy-WETH");
+  await sleep(sleepDuration);
+  console.log();
+
+  require("./deploy-DAI");
+  await sleep(sleepDuration);
+  console.log();
 })();

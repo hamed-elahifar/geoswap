@@ -215,7 +215,7 @@ describe("Token contract", () => {
       assert.equal(amountC, amountCafterAddLiquidity + 500_000);
     });
 
-    xit("some check after add addLiquidity", async () => {
+    it("some check after add addLiquidity", async () => {
       console.log();
       console.log("pairInfo A-B");
       const pairInfoAB = await liquidityValueCalculator.pairInfo(
@@ -238,12 +238,12 @@ describe("Token contract", () => {
       console.log("totalSupply B-C", pairInfoBC[2] / 10 ** 18);
     });
 
-    xit("should getPair", async () => {
+    it("should getPair", async () => {
       const pair = await factory.getPair(tokenA.address, tokenB.address);
       // console.log("pair", pair);
     });
 
-    xit("should trasfter 100_000 token to router", async () => {
+    it("should trasfter 100_000 token to router", async () => {
       await tokenA.transferFrom(
         owner1.address,
         router02.address,
@@ -315,7 +315,7 @@ describe("Token contract", () => {
       console.log("totalSupply", pairInfoAB[2] / 10 ** 18);
     });
 
-    xit("should swap from B to C", async () => {
+    it("should swap from B to C", async () => {
       const amountA = await tokenA.balanceOf(owner1.address);
       const amountB = await tokenB.balanceOf(owner1.address);
       const amountC = await tokenC.balanceOf(owner1.address);
@@ -402,7 +402,7 @@ describe("Token contract", () => {
       // console.log();
     });
 
-    xit("should check user Balance", async () => {
+    it("should check user Balance", async () => {
       // await ethers.advanceTimeAndBlock(1);
       // await ethers.wait();
 
@@ -422,6 +422,7 @@ describe("Token contract", () => {
       console.log();
     });
 
+    // @TODO: fix this
     xit("should swap 100 from A to C", async () => {
       let pathAC = [tokenA.address, tokenB.address, tokenC.address];
       let amountIn = 2 * 1000;
@@ -456,6 +457,7 @@ describe("Token contract", () => {
       console.log("totalSupply", pairInfoBC[2].toString());
     });
 
+    // @TODO: fix this 
     xit("should add addLiquidityETH", async () => {
       const amoutA = await tokenA.balanceOf(owner1.address);
       console.log("amoutA", amoutA.toString());

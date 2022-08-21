@@ -1,37 +1,29 @@
 console.clear();
-require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
+
+const path = require("path");
+const configFile = path.resolve(
+  process.cwd(),
+  "..",
+  `.env.${process.env.NODE_ENV}`
+);
+require("dotenv").config({ path: configFile });
 
 const ethers = require("ethers");
 
-const moonbaseProviderRPC = {
-  moonbase: {
-    name: "moonbase-alpha",
-    rpc: "https://rpc.api.moonbase.moonbeam.network",
-    chainId: 1287, // 0x507 in hex,
-    allowUnlimitedContractSize: true,
-  },
-};
+const routerAddress = process.env.ROUTER_ADDRESS;
+const factoryAddress = process.env.FACTORY_ADDRESS;
 
-const binanceProviderRPC = {
-  moonbase: {
-    name: "binance-test",
-    rpc: "https://data-seed-prebsc-1-s1.binance.org:8545",
-    chainId: 97,
-    // gasLimit: 100_000_000_000_000,
-    // allowUnlimitedContractSize: true,
-    // gas: 2100000,
-    // gasPrice: 8000000000,
-  },
-};
+const USDC = process.env.USDC;
+const USDT = process.env.USDT;
+const WETH = process.env.WETH;
+const DAI = process.env.DAI;
 
-const providerRPC = moonbaseProviderRPC;
-
-// ethers provider
 const provider = new ethers.providers.StaticJsonRpcProvider(
-  providerRPC.moonbase.rpc,
+  process.env.PROVIDER_RPC,
   {
-    chainId: providerRPC.moonbase.chainId,
-    name: providerRPC.moonbase.name,
+    chainId: +process.env.CHAIN_ID,
+    name: process.env.PROVIDER_NAME,
+    // allowUnlimitedContractSize: true, // not sure if this should be here
   }
 );
 
@@ -63,9 +55,6 @@ const getNonce = async () => {
 const { abi: routerABI } = require("../abi/router.json");
 const { abi: factoryABI } = require("../abi/factory.json");
 
-const routerAddress = "0xcEC6Cc2534e9b12978121717f8dC2cA4F531ac76";
-const factoryAddress = "0x34101eDF6d2CF5FCBD03870c6524FcaD8e8f8587";
-
 const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 
 const router = new ethers.Contract(routerAddress, routerABI, wallet);
@@ -79,27 +68,44 @@ const getInfo = async () => {
   console.log(`factory address is: ${factory}`);
 };
 
-const USDC = "0xF572DF8281E109e014db8A3144A7a87512ba6820";
-const USDT = "0xeE281CE1A7890Cb84a3eF3cfdfE357D703b7F47d";
-const WETH = "0xF10D64Ff2d96234a7Fb01b55bDb2D39b610473fa";
-const DAI = "0xd1145BAC492f1516FeABd6FA8AC63AE291630b24";
+const createPairA = async () => {
+  const createReceipt = await factory.createPair(USDC, USDT, {
+    // gasPrice: ethers.utils.parseUnits("10", "gwei"),
+    // gasLimit: 1_000_000,
+    // from: ownerAddress,
+  });
+  await createReceipt.wait();
+
+  console.log(`Tx successful with hash: ${createReceipt.hash}`);
+};
 
 const addLiquidityA = async () => {
   const createReceipt = await router.addLiquidity(
     USDC, // address tokenA,
     USDT, // address tokenB,
-    100_000, // uint256 amountADesired,
-    100_000, // uint256 amountBDesired,
-    100, // uint256 amountAMin,
-    100, // uint256 amountBMin,
+    100_000n, // uint256 amountADesired,
+    100_000n, // uint256 amountBDesired,
+    100n, // uint256 amountAMin,
+    100n, // uint256 amountBMin,
     ownerAddress, // address to,
     Math.floor(Date.now() / 1000) + 60 * 10, // uint256 deadline
     {
-      gasPrice: ethers.utils.parseUnits("10", "gwei"),
-      gasLimit: 1_000_000,
-      from: ownerAddress,
+      // gasPrice: ethers.utils.parseUnits("10", "gwei"),
+      // gasLimit: 1_000_000,
+      // from: ownerAddress,
     }
   );
+  await createReceipt.wait();
+
+  console.log(`Tx successful with hash: ${createReceipt.hash}`);
+};
+
+const createPairB = async () => {
+  const createReceipt = await factory.createPair(USDT, WETH, {
+    // gasPrice: ethers.utils.parseUnits("10", "gwei"),
+    // gasLimit: 1_000_000,
+    // from: ownerAddress,
+  });
   await createReceipt.wait();
 
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
@@ -122,6 +128,17 @@ const addLiquidityB = async () => {
       from: ownerAddress,
     }
   );
+  await createReceipt.wait();
+
+  console.log(`Tx successful with hash: ${createReceipt.hash}`);
+};
+
+const createPairC = async () => {
+  const createReceipt = await factory.createPair(USDT, DAI, {
+    // gasPrice: ethers.utils.parseUnits("10", "gwei"),
+    // gasLimit: 1_000_000,
+    // from: ownerAddress,
+  });
   await createReceipt.wait();
 
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
@@ -175,11 +192,18 @@ const getPair = async (tokenA, tokenB) => {
     await getProviderInfo();
     await getInfo();
     await getNonce();
+
+    // await createPairA();
     // await addLiquidityA();
-    await addLiquidityB();
+
+    // await createPairB();
+    // await addLiquidityB();
+
+    // await createPairC();
     // await addLiquidityC();
-    // await getAllPairsLength();
-    // await allPairs();
+
+    await getAllPairsLength();
+    await allPairs();
     // await getPair(USDC, USDT);
   } catch (error) {
     console.log(error);

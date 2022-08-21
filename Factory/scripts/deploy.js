@@ -1,3 +1,11 @@
+const path = require("path");
+const configFile = path.resolve(
+  process.cwd(),
+  "..",
+  `.env.${process.env.NODE_ENV}`
+);
+require("dotenv").config({ path: configFile });
+
 const { ethers } = require("hardhat");
 const fs = require("fs");
 
@@ -5,20 +13,6 @@ async function deploy() {
   const [account] = await ethers.getSigners();
   const deployerAddress = account.address;
   console.log(`Deploying contracts using ${deployerAddress}`);
-
-  // // Deploy WETH
-  // const weth = await ethers.getContractFactory("WETH");
-  // const wethInstance = await weth.deploy();
-  // await wethInstance.deployed();
-
-  // console.log(`WETH deployed to : ${wethInstance.address}`);
-
-  // const wethData = {
-  //   address: wethInstance.address,
-  //   abi: JSON.parse(wethInstance.interface.format("json")),
-  // };
-
-  // fs.writeFileSync("abi/WETH.json", JSON.stringify(wethData, null, 2));
 
   // Deploy Factory
   const factory = await ethers.getContractFactory("GeosFactory");
@@ -38,11 +32,11 @@ async function deploy() {
   const router = await ethers.getContractFactory("Router02");
   const routerInstance = await router.deploy(
     factoryInstance.address,
-    "0xF10D64Ff2d96234a7Fb01b55bDb2D39b610473fa" //wethInstance.address
+    process.env.WETH
   );
   await routerInstance.deployed();
 
-  console.log(`Router V02 deployed to :  ${routerInstance.address}`);
+  console.log(`Router V02 deployed to : ${routerInstance.address}`);
 
   const routerData = {
     address: routerInstance.address,

@@ -34,7 +34,7 @@ library GeosLibrary {
                         hex"ff",
                         factory,
                         keccak256(abi.encodePacked(token0, token1)),
-                        hex"591fe06b104df5cd6a745fe7b582b53254d4f7b0515a760ecb5d350f80bb7db2" // init code hash
+                        hex"6e882f789d1bc2d45b0cee2d9851c23d88d78ff853dc5041b2a5dfdc01c9f2d5" // init code hash
                     )
                 )
             )
