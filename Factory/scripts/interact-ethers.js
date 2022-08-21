@@ -1,5 +1,7 @@
 console.clear();
 require("dotenv").config();
+// require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
+
 const ethers = require("ethers");
 
 const moonbaseProviderRPC = {
@@ -7,10 +9,7 @@ const moonbaseProviderRPC = {
     name: "moonbase-alpha",
     rpc: "https://rpc.api.moonbase.moonbeam.network",
     chainId: 1287, // 0x507 in hex,
-    gasLimit: 100_000_000_000_000,
     allowUnlimitedContractSize: true,
-    gas: 2100000,
-    gasPrice: 8000000000,
   },
 };
 
@@ -26,7 +25,7 @@ const binanceProviderRPC = {
   },
 };
 
-const providerRPC = binanceProviderRPC;
+const providerRPC = moonbaseProviderRPC;
 
 // ethers provider
 const provider = new ethers.providers.StaticJsonRpcProvider(
@@ -65,8 +64,8 @@ const getNonce = async () => {
 const { abi: routerABI } = require("../abi/router.json");
 const { abi: factoryABI } = require("../abi/factory.json");
 
-const routerAddress = "0xE9E1d9A3F08CBeb9850bE90d1687D4d042d76eCF";
-const factoryAddress = "0x598676d69072862D508b01a039B4bcE9A774f7Df";
+const routerAddress = "0xcEC6Cc2534e9b12978121717f8dC2cA4F531ac76";
+const factoryAddress = "0x34101eDF6d2CF5FCBD03870c6524FcaD8e8f8587";
 
 const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 
@@ -118,8 +117,10 @@ const addLiquidityB = async () => {
     ownerAddress, // address to,
     Math.floor(Date.now() / 1000) + 60 * 10, // uint256 deadline
     {
+      // gas: 2100000,
       gasPrice: ethers.utils.parseUnits("100", "gwei"),
-      gasLimit: 1_000_000,
+      gasLimit: 10_000_000,
+      from: ownerAddress,
     }
   );
   await createReceipt.wait();
@@ -175,8 +176,8 @@ const getPair = async (tokenA, tokenB) => {
     await getProviderInfo();
     await getInfo();
     await getNonce();
-    await addLiquidityA();
-    // await addLiquidityB();
+    // await addLiquidityA();
+    await addLiquidityB();
     // await addLiquidityC();
     // await getAllPairsLength();
     // await allPairs();
