@@ -1,24 +1,24 @@
-require("dotenv").config();
+require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 const ethers = require("ethers");
 
-const providerRPC = {
-  moonbase: {
-    name: "moonbase-alpha",
-    rpc: "https://rpc.api.moonbase.moonbeam.network",
-    chainId: 1287, // 0x507 in hex,
-  },
-};
-// ethers provider
+const ownerAddress = process.env.OWNER_ADDRESS;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+
+const usdcAddress = process.env.USDC;
+const usdtAddress = process.env.USDT;
+const wethAddress = process.env.WETH;
+const daiAddress = process.env.DAI;
+const routerAddress = process.env.ROUTER_ADDRESS;
+
+const amount = 100_000;
+
 const provider = new ethers.providers.StaticJsonRpcProvider(
-  providerRPC.moonbase.rpc,
+  process.env.PROVIDER_RPC,
   {
-    chainId: providerRPC.moonbase.chainId,
-    name: providerRPC.moonbase.name,
+    chainId: +process.env.CHAIN_ID,
+    name: process.env.PROVIDER_NAME,
   }
 );
-
-const ownerAddress = "0xfDe2b8b5fb8B03CB4eCc92791D67002D54B821Ad";
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 // Get balance
 const getBalance = async () => {
@@ -28,18 +28,12 @@ const getBalance = async () => {
   console.log(`Owner Balance is: ${ownerBalance} ETH`);
 };
 
-let wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 
 const { abi: usdcABI } = require("../abi/USDC.json");
 const { abi: usdtABI } = require("../abi/USDT.json");
 const { abi: wethABI } = require("../abi/WETH.json");
 const { abi: daiABI } = require("../abi/DAI.json");
-
-const usdcAddress = "0xd1145BAC492f1516FeABd6FA8AC63AE291630b24";
-const usdtAddress = "0xeE281CE1A7890Cb84a3eF3cfdfE357D703b7F47d";
-const wethAddress = "0xF10D64Ff2d96234a7Fb01b55bDb2D39b610473fa";
-const daiAddress = "0xF572DF8281E109e014db8A3144A7a87512ba6820";
-const routerAddress = "0xE9E1d9A3F08CBeb9850bE90d1687D4d042d76eCF";
 
 const USDC = new ethers.Contract(usdcAddress, usdcABI, wallet);
 const USDT = new ethers.Contract(usdtAddress, usdtABI, wallet);
@@ -100,9 +94,26 @@ const getInfo = async () => {
 
   const balanceOfWETH = await WETH.balanceOf(ownerAddress);
   console.log(`balanceOf: ${balanceOfWETH}`);
+
+  console.log();
+  console.log("+++ DAI +++");
+
+  const nameDAI = await DAI.name();
+  console.log(`name is: ${nameDAI}`);
+
+  const symbolDAI = await DAI.symbol();
+  console.log(`symbol is: ${symbolDAI}`);
+
+  const decimalsDAI = await DAI.decimals();
+  console.log(`decimals is: ${decimalsDAI}`);
+
+  const totalSupplyDAI = await DAI.totalSupply();
+  console.log(`totalSupply is: ${totalSupplyDAI}`);
+
+  const balanceOfDAI = await DAI.balanceOf(ownerAddress);
+  console.log(`balanceOf: ${balanceOfDAI}`);
 };
 
-const amount = 100_000;
 
 const approveUSDC = async () => {
   const createReceipt = await USDC.approve(routerAddress, amount);
@@ -136,10 +147,10 @@ const approveDAI = async () => {
   try {
     await getBalance();
     await getInfo();
-    await approveUSDC();
-    await approveUSDT();
-    await approveWETH();
-    await approveDAI();
+    // await approveUSDC();
+    // await approveUSDT();
+    // await approveWETH();
+    // await approveDAI();
   } catch (error) {
     console.log(error);
   }
