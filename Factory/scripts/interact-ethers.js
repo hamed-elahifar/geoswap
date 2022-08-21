@@ -1,6 +1,5 @@
 console.clear();
-require("dotenv").config();
-// require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
+require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 
 const ethers = require("ethers");
 
@@ -36,7 +35,7 @@ const provider = new ethers.providers.StaticJsonRpcProvider(
   }
 );
 
-const ownerAddress = "0xfDe2b8b5fb8B03CB4eCc92791D67002D54B821Ad";
+const ownerAddress = process.env.OWNER_ADDRESS;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 // Get balance
