@@ -20,6 +20,8 @@ const provider = new ethers.providers.StaticJsonRpcProvider(
 const ownerAddress = process.env.OWNER_ADDRESS;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
+const contractAddress = process.env.GEOS_DISTRIBUTOR_V2;
+
 // Get balance
 const getBalance = async () => {
   const ownerBalance = ethers.utils.formatEther(
@@ -29,8 +31,6 @@ const getBalance = async () => {
 };
 
 const { abi } = require("../abi/GeosDistributorV2.json");
-
-const contractAddress = "0x51cbe251A48B82582052e5e4c1028300d742900d";
 
 // Create contract instance
 const GeosDistributorV2View = new ethers.Contract(
@@ -61,10 +61,34 @@ const startFarming = async () => {
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
-const addPool = async () => {
+const addPoolA = async () => {
   const createReceipt = await GeosDistributorV2Change.add(
     "100", // uint256 _allocPoint,
-    "0xc548ac1CF9AabbDf8313f9A8A5d0Cd34F3E91588", // IBoringERC20 _lpToken,
+    process.env.PAIRS_A, // IBoringERC20 _lpToken,
+    0, // uint16 _depositFeeBP,
+    0 // uint256 _harvestInterval
+  );
+  await createReceipt.wait();
+
+  console.log(`Tx successful with hash: ${createReceipt.hash}`);
+};
+
+const addPoolB = async () => {
+  const createReceipt = await GeosDistributorV2Change.add(
+    "100", // uint256 _allocPoint,
+    process.env.PAIRS_B, // IBoringERC20 _lpToken,
+    0, // uint16 _depositFeeBP,
+    0 // uint256 _harvestInterval
+  );
+  await createReceipt.wait();
+
+  console.log(`Tx successful with hash: ${createReceipt.hash}`);
+};
+
+const addPoolC = async () => {
+  const createReceipt = await GeosDistributorV2Change.add(
+    "100", // uint256 _allocPoint,
+    process.env.PAIRS_C, // IBoringERC20 _lpToken,
     0, // uint16 _depositFeeBP,
     0 // uint256 _harvestInterval
   );
@@ -83,7 +107,9 @@ const getAllPoolInfo = async () => {
 (async () => {
   await getBalance();
   await getPoolLength();
-  // await startFarming();
-  // await addPool();
+  await startFarming();
+  // await addPoolA();
+  // await addPoolB();
+  // await addPoolC();
   await getAllPoolInfo();
 })();

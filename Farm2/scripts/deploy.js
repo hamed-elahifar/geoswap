@@ -1,3 +1,11 @@
+const path = require("path");
+const configFile = path.resolve(
+  process.cwd(),
+  "..",
+  `.env.${process.env.NODE_ENV}`
+);
+require("dotenv").config({ path: configFile });
+
 const fs = require("fs");
 
 const sleepDuration = 10000;
@@ -14,8 +22,7 @@ async function main() {
 
   const Token = await ethers.getContractFactory("GeosSwapTokenV2");
   const token = await Token.deploy(
-    /* deployer.address /* trustedForwarder */
-    "0x4FCDa98aE1dA6a54573263302E149831Bc35217C" // Behnam 0x4FCDa98aE1dA6a54573263302E149831Bc35217C
+    process.env.TRUSTED_FORWARDER
   );
   console.log("Token address:", token.address);
 
@@ -32,7 +39,7 @@ async function main() {
 
   const Farm = await ethers.getContractFactory("GeosDistributorV2");
   const farm = await Farm.deploy(
-    "0x76d3F8fd95879a5503dFFD30E0403694f566767D", // token.address, // geos.address,
+    token.address, // geos.address,
     100, // geosPerSec,
     deployer.address, // dev.address,
     deployer.address, // treasury.address,
@@ -41,7 +48,7 @@ async function main() {
     200, // treasuryPercent,
     100 // investorPercent
   );
-  
+
   console.log("Geos Distributor V2:", farm.address);
 
   const GeosDistributorV2Data = {
