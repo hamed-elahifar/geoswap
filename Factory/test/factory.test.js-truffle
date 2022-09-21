@@ -49,11 +49,11 @@ contract("Factory && Router", ([owner1, owner2]) => {
     });
 
     it("deploys Router successfully", async () => {
-      const solarRouter02Address = await router02.address;
-      assert.notEqual(solarRouter02Address, 0x0);
-      assert.notEqual(solarRouter02Address, "");
-      assert.notEqual(solarRouter02Address, null);
-      assert.notEqual(solarRouter02Address, undefined);
+      const geosRouter02Address = await router02.address;
+      assert.notEqual(geosRouter02Address, 0x0);
+      assert.notEqual(geosRouter02Address, "");
+      assert.notEqual(geosRouter02Address, null);
+      assert.notEqual(geosRouter02Address, undefined);
     });
 
     it("allPairsLength lengh should be 0", async () => {

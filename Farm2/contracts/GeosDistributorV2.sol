@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
 import "./libraries/BoringERC20.sol";
-import "./ISolarPair.sol";
+import "./IGeosPair.sol";
 
 import "hardhat/console.sol";
 
@@ -24,9 +24,9 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
     // Info of each pool.
     struct PoolInfo {
         IBoringERC20 lpToken; // Address of LP token contract.
-        uint256 allocPoint; // How many allocation points assigned to this pool. Solar to distribute per block.
-        uint256 lastRewardTimestamp; // Last block number that Solar distribution occurs.
-        uint256 accGeosPerShare; // Accumulated Solar per share, times 1e18. See below.
+        uint256 allocPoint; // How many allocation points assigned to this pool. Geos to distribute per block.
+        uint256 lastRewardTimestamp; // Last block number that Geos distribution occurs.
+        uint256 accGeosPerShare; // Accumulated Geos per share, times 1e18. See below.
         uint16 depositFeeBP; // Deposit fee in basis points
         uint256 harvestInterval; // Harvest interval in seconds
         uint256 totalLp; // Total token in Pool
@@ -629,7 +629,7 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
                 user.nextHarvestUntil = block.timestamp + pool.harvestInterval;
 
                 // send rewards
-                safeSolarTransfer(msg.sender, pendingRewards);
+                safeGeosTransfer(msg.sender, pendingRewards);
             }
         } else if (pending > 0) {
             totalLockedUpRewards += pending;
@@ -639,7 +639,7 @@ contract GeosDistributorV2 is Ownable, ReentrancyGuard {
     }
 
     // Safe Geos transfer function, just in case if rounding error causes pool do not have enough Geos.
-    function safeSolarTransfer(address _to, uint256 _amount) internal {
+    function safeGeosTransfer(address _to, uint256 _amount) internal {
         if (geos.balanceOf(address(this)) > totalGeosInPools) {
             //geosBal = total Geos in GeosDistributor - total Geos in Geos pools, this will make sure that GeosDistributor never transfer rewards from deposited Geos pools
             uint256 geosBal = geos.balanceOf(address(this)) -

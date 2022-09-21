@@ -15,7 +15,7 @@ const factoryAddress = process.env.FACTORY_ADDRESS;
 
 const USDC = process.env.USDC;
 const USDT = process.env.USDT;
-const WETH = process.env.WETH;
+// const WETH = process.env.WETH;
 const DAI = process.env.DAI;
 
 const provider = new ethers.providers.StaticJsonRpcProvider(
@@ -68,7 +68,7 @@ const getInfo = async () => {
   console.log(`factory address is: ${factory}`);
 };
 
-const createPairA = async () => {
+const createPairUSDC_USDT = async () => {
   const createReceipt = await factory.createPair(USDC, USDT, {
     // gasPrice: ethers.utils.parseUnits("10", "gwei"),
     // gasLimit: 1_000_000,
@@ -79,7 +79,7 @@ const createPairA = async () => {
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
-const addLiquidityA = async () => {
+const addLiquidityUSDC_USDT = async () => {
   const createReceipt = await router.addLiquidity(
     USDC, // address tokenA,
     USDT, // address tokenB,
@@ -100,40 +100,7 @@ const addLiquidityA = async () => {
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
-const createPairB = async () => {
-  const createReceipt = await factory.createPair(USDT, WETH, {
-    // gasPrice: ethers.utils.parseUnits("10", "gwei"),
-    // gasLimit: 1_000_000,
-    // from: ownerAddress,
-  });
-  await createReceipt.wait();
-
-  console.log(`Tx successful with hash: ${createReceipt.hash}`);
-};
-
-const addLiquidityB = async () => {
-  const createReceipt = await router.addLiquidity(
-    USDT, // address tokenA,
-    WETH, // address tokenB,
-    100_000, // uint256 amountADesired,
-    100_000, // uint256 amountBDesired,
-    100, // uint256 amountAMin,
-    100, // uint256 amountBMin,
-    ownerAddress, // address to,
-    Math.floor(Date.now() / 1000) + 60 * 10, // uint256 deadline
-    {
-      // gas: 2100000,
-      gasPrice: ethers.utils.parseUnits("100", "gwei"),
-      gasLimit: 10_000_000,
-      from: ownerAddress,
-    }
-  );
-  await createReceipt.wait();
-
-  console.log(`Tx successful with hash: ${createReceipt.hash}`);
-};
-
-const createPairC = async () => {
+const createPairUSDT_DAI = async () => {
   const createReceipt = await factory.createPair(USDT, DAI, {
     // gasPrice: ethers.utils.parseUnits("10", "gwei"),
     // gasLimit: 1_000_000,
@@ -144,9 +111,40 @@ const createPairC = async () => {
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
-const addLiquidityC = async () => {
+const addLiquidityUSDT_DAI = async () => {
   const createReceipt = await router.addLiquidity(
     USDT, // address tokenA,
+    DAI, // address tokenB,
+    100_000, // uint256 amountADesired,
+    100_000, // uint256 amountBDesired,
+    100, // uint256 amountAMin,
+    100, // uint256 amountBMin,
+    ownerAddress, // address to,
+    Math.floor(Date.now() / 1000) + 60 * 10, // uint256 deadline
+    {
+      gasPrice: ethers.utils.parseUnits("1", "gwei"),
+      gasLimit: 10_000_000,
+    }
+  );
+  await createReceipt.wait();
+
+  console.log(`Tx successful with hash: ${createReceipt.hash}`);
+};
+
+const createPairUSDC_DAI = async () => {
+  const createReceipt = await factory.createPair(USDC, DAI, {
+    // gasPrice: ethers.utils.parseUnits("10", "gwei"),
+    // gasLimit: 1_000_000,
+    // from: ownerAddress,
+  });
+  await createReceipt.wait();
+
+  console.log(`Tx successful with hash: ${createReceipt.hash}`);
+};
+
+const addLiquidityUSDC_DAI = async () => {
+  const createReceipt = await router.addLiquidity(
+    USDC, // address tokenA,
     DAI, // address tokenB,
     100_000, // uint256 amountADesired,
     100_000, // uint256 amountBDesired,
@@ -193,18 +191,25 @@ const getPair = async (tokenA, tokenB) => {
     await getInfo();
     await getNonce();
 
-    // await createPairA();
-    // await addLiquidityA();
+    // await createPairUSDC_USDT();
+    // await addLiquidityUSDC_USDT();
 
-    // await createPairB();
-    // await addLiquidityB();
+    // await createPairUSDT_DAI();
+    // await addLiquidityUSDT_DAI();
 
-    // await createPairC();
-    // await addLiquidityC();
+    // await createPairUSDC_DAI();
+    // await addLiquidityUSDC_DAI();
 
     await getAllPairsLength();
     await allPairs();
+
     // await getPair(USDC, USDT);
+    // console.log();
+    // await getPair(USDT, DAI);
+    // console.log();
+    // await getPair(USDC, DAI);
+    // console.log();
+
   } catch (error) {
     console.log(error);
   }

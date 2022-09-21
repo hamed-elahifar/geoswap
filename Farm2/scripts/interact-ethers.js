@@ -61,10 +61,10 @@ const startFarming = async () => {
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
-const addPoolA = async () => {
+const addPoolUSDC_USDT = async () => {
   const createReceipt = await GeosDistributorV2Change.add(
     "100", // uint256 _allocPoint,
-    process.env.PAIRS_A, // IBoringERC20 _lpToken,
+    process.env.USDC_USDT, // IBoringERC20 _lpToken,
     0, // uint16 _depositFeeBP,
     0 // uint256 _harvestInterval
   );
@@ -73,10 +73,10 @@ const addPoolA = async () => {
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
-const addPoolB = async () => {
+const addPoolUSDT_DAI = async () => {
   const createReceipt = await GeosDistributorV2Change.add(
     "100", // uint256 _allocPoint,
-    process.env.PAIRS_B, // IBoringERC20 _lpToken,
+    process.env.USDT_DAI, // IBoringERC20 _lpToken,
     0, // uint16 _depositFeeBP,
     0 // uint256 _harvestInterval
   );
@@ -85,10 +85,10 @@ const addPoolB = async () => {
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
-const addPoolC = async () => {
+const addPoolUSDC_DAI = async () => {
   const createReceipt = await GeosDistributorV2Change.add(
     "100", // uint256 _allocPoint,
-    process.env.PAIRS_C, // IBoringERC20 _lpToken,
+    process.env.USDC_DAI, // IBoringERC20 _lpToken,
     0, // uint16 _depositFeeBP,
     0 // uint256 _harvestInterval
   );
@@ -107,9 +107,9 @@ const getAllPoolInfo = async () => {
 (async () => {
   await getBalance();
   await getPoolLength();
-  await startFarming();
-  // await addPoolA();
-  // await addPoolB();
-  // await addPoolC();
+  // await startFarming();
+  // await addPoolUSDC_USDT();
+  // await addPoolUSDT_DAI();
+  // await addPoolUSDC_DAI();
   await getAllPoolInfo();
 })();

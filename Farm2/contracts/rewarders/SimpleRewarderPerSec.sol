@@ -6,15 +6,15 @@ import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./IRewarder.sol";
-import "../ISolarDistributorV2.sol";
+import "../IGeosDistributorV2.sol";
 import "../libraries/BoringERC20.sol";
 
 /**
- * This is a sample contract to be used in the SolarDistributorV2 contract for partners to reward
- * stakers with their native token alongside SOLAR.
+ * This is a sample contract to be used in the GeosDistributorV2 contract for partners to reward
+ * stakers with their native token alongside Geos.
  *
  * It assumes no minting rights, so requires a set amount of YOUR_TOKEN to be transferred to this contract prior.
- * E.g. say you've allocated 100,000 XYZ to the SOLAR-XYZ farm over 30 days. Then you would need to transfer
+ * E.g. say you've allocated 100,000 XYZ to the Geos-XYZ farm over 30 days. Then you would need to transfer
  * 100,000 XYZ and set the block reward accordingly so it's fully distributed after 30 days.
  */
 contract SimpleRewarderPerSec is IRewarder, Ownable, ReentrancyGuard {
@@ -23,7 +23,7 @@ contract SimpleRewarderPerSec is IRewarder, Ownable, ReentrancyGuard {
     IBoringERC20 public immutable override rewardToken;
     uint256 public immutable pid;
     bool public immutable isNative;
-    ISolarDistributorV2 public immutable distributorV2;
+    IGeosDistributorV2 public immutable distributorV2;
 
     /// @notice Info of each distributorV2 user.
     /// `amount` LP token amount the user has provided.
@@ -55,7 +55,7 @@ contract SimpleRewarderPerSec is IRewarder, Ownable, ReentrancyGuard {
     modifier onlyDistributorV2() {
         require(
             msg.sender == address(distributorV2),
-            "onlyDistributorV2: only SolarDistributorV2 can call this function"
+            "onlyDistributorV2: only GeosDistributorV2 can call this function"
         );
         _;
     }
@@ -63,7 +63,7 @@ contract SimpleRewarderPerSec is IRewarder, Ownable, ReentrancyGuard {
     constructor(
         IBoringERC20 _rewardToken,
         uint256 _tokenPerSec,
-        ISolarDistributorV2 _distributorV2,
+        IGeosDistributorV2 _distributorV2,
         uint256 _pid,
         bool _isNative
     ) {
@@ -73,7 +73,7 @@ contract SimpleRewarderPerSec is IRewarder, Ownable, ReentrancyGuard {
         );
         require(
             Address.isContract(address(_distributorV2)),
-            "constructor: SolarDistributorV2 must be a valid contract"
+            "constructor: GeosDistributorV2 must be a valid contract"
         );
         rewardToken = _rewardToken;
         pid = _pid;
@@ -126,7 +126,7 @@ contract SimpleRewarderPerSec is IRewarder, Ownable, ReentrancyGuard {
         }
     }
 
-    /// @notice Function called by SolarDistributorV2 whenever staker claims SOLAR harvest. Allows staker to also receive a 2nd reward token.
+    /// @notice Function called by GeosDistributorV2 whenever staker claims Geos harvest. Allows staker to also receive a 2nd reward token.
     /// @param _user Address of user
     /// @param _lpAmount Number of LP tokens the user has
     function onGeosReward(address _user, uint256 _lpAmount)

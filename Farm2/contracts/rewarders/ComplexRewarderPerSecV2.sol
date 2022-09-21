@@ -6,22 +6,22 @@ import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./IComplexRewarder.sol";
-import "../ISolarDistributorV2.sol";
+import "../IGeosDistributorV2.sol";
 import "../libraries/BoringERC20.sol";
 
 /**
- * This is a sample contract to be used in the SolarDistributorV2 contract for partners to reward
- * stakers with their native token alongside SOLAR.
+ * This is a sample contract to be used in the GeosDistributorV2 contract for partners to reward
+ * stakers with their native token alongside GEOS.
  *
  * It assumes no minting rights, so requires a set amount of YOUR_TOKEN to be transferred to this contract prior.
- * E.g. say you've allocated 100,000 XYZ to the SOLAR-XYZ farm over 30 days. Then you would need to transfer
+ * E.g. say you've allocated 100,000 XYZ to the GEOS-XYZ farm over 30 days. Then you would need to transfer
  * 100,000 XYZ and set the block reward accordingly so it's fully distributed after 30 days.
  */
 contract ComplexRewarderPerSecV2 is IComplexRewarder, Ownable, ReentrancyGuard {
     using BoringERC20 for IBoringERC20;
 
     IBoringERC20 public immutable override rewardToken;
-    ISolarDistributorV2 public immutable distributorV2;
+    IGeosDistributorV2 public immutable distributorV2;
     bool public immutable isNative;
 
     /// @notice Info of each distributorV2 user.
@@ -107,7 +107,7 @@ contract ComplexRewarderPerSecV2 is IComplexRewarder, Ownable, ReentrancyGuard {
 
     constructor(
         IBoringERC20 _rewardToken,
-        ISolarDistributorV2 _distributorV2,
+        IGeosDistributorV2 _distributorV2,
         bool _isNative
     ) {
         require(
@@ -116,7 +116,7 @@ contract ComplexRewarderPerSecV2 is IComplexRewarder, Ownable, ReentrancyGuard {
         );
         require(
             Address.isContract(address(_distributorV2)),
-            "constructor: SolarDistributorV2 must be a valid contract"
+            "constructor: GeosDistributorV2 must be a valid contract"
         );
         rewardToken = _rewardToken;
         distributorV2 = _distributorV2;
@@ -355,7 +355,7 @@ contract ComplexRewarderPerSecV2 is IComplexRewarder, Ownable, ReentrancyGuard {
         }
     }
 
-    /// @notice Function called by SolarDistributorV2 whenever staker claims SOLAR harvest. Allows staker to also receive a 2nd reward token.
+    /// @notice Function called by GeosDistributorV2 whenever staker claims GEOS harvest. Allows staker to also receive a 2nd reward token.
     /// @param _user Address of user
     /// @param _amount Number of LP tokens the user has
     function onGeosReward(

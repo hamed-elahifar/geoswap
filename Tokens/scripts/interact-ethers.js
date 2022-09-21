@@ -121,6 +121,8 @@ const getInfo = async () => {
 
   const balanceOfDAI = await DAI.balanceOf(ownerAddress);
   console.log(`balanceOf: ${balanceOfDAI}`);
+
+  console.log();
 };
 
 const approveUSDC = async () => {
@@ -169,7 +171,7 @@ const approveDAI = async () => {
     await getInfo();
     await approveUSDC();
     await approveUSDT();
-    await approveWETH();
+    // await approveWETH();
     await approveDAI();
   } catch (error) {
     console.log(error);

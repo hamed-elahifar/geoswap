@@ -25,7 +25,7 @@ async function deploy() {
   );
 
   // =============================== Locker ================================================
-  const Locker = await ethers.getContractFactory("SolarLocker");
+  const Locker = await ethers.getContractFactory("GeosLocker");
   const locker = await Locker.deploy();
   console.log("Locker address:", locker.address);
 
