@@ -15,6 +15,9 @@ const usdcAddress = process.env.USDC;
 const usdtAddress = process.env.USDT;
 const wethAddress = process.env.WETH;
 const daiAddress = process.env.DAI;
+const AAddress = process.env.A;
+const BAddress = process.env.B;
+const CAddress = process.env.C;
 
 const routerAddress = process.env.ROUTER_ADDRESS;
 const factoryAddress = process.env.FACTORY_ADDRESS;
@@ -43,11 +46,18 @@ const { abi: usdcABI } = require("../abi/USDC.json");
 const { abi: usdtABI } = require("../abi/USDT.json");
 const { abi: wethABI } = require("../abi/WETH.json");
 const { abi: daiABI } = require("../abi/DAI.json");
+const { abi: AABI } = require("../abi/A.json");
+const { abi: BABI } = require("../abi/B.json");
+const { abi: CABI } = require("../abi/C.json");
 
 const USDC = new ethers.Contract(usdcAddress, usdcABI, wallet);
 const USDT = new ethers.Contract(usdtAddress, usdtABI, wallet);
 const WETH = new ethers.Contract(wethAddress, wethABI, wallet);
 const DAI = new ethers.Contract(daiAddress, daiABI, wallet);
+
+const A = new ethers.Contract(AAddress, AABI, wallet);
+const B = new ethers.Contract(BAddress, BABI, wallet);
+const C = new ethers.Contract(CAddress, CABI, wallet);
 
 const getInfo = async () => {
   console.log();
@@ -125,42 +135,12 @@ const getInfo = async () => {
   console.log();
 };
 
-const approveUSDC = async () => {
-  const createReceipt1 = await USDC.approve(routerAddress, amount);
+const approve = async (contract) => {
+  const createReceipt1 = await contract.approve(routerAddress, amount);
   await createReceipt1.wait();
 
-  const allowance = await USDC.allowance(ownerAddress, routerAddress);
-  console.log(`USDC allowance: ${allowance}`);
-
-  console.log(`Tx successful with hash: ${createReceipt1.hash}`);
-};
-
-const approveUSDT = async () => {
-  const createReceipt1 = await USDT.approve(routerAddress, amount);
-  await createReceipt1.wait();
-
-  const allowance = await USDT.allowance(ownerAddress, routerAddress);
-  console.log(`USDT allowance: ${allowance}`);
-
-  console.log(`Tx successful with hash: ${createReceipt1.hash}`);
-};
-
-const approveWETH = async () => {
-  const createReceipt1 = await WETH.approve(routerAddress, amount);
-  await createReceipt1.wait();
-
-  const allowance = await WETH.allowance(ownerAddress, routerAddress);
-  console.log(`WETH allowance: ${allowance}`);
-
-  console.log(`Tx successful with hash: ${createReceipt1.hash}`);
-};
-
-const approveDAI = async () => {
-  const createReceipt1 = await DAI.approve(routerAddress, amount);
-  await createReceipt1.wait();
-
-  const allowance = await DAI.allowance(ownerAddress, routerAddress);
-  console.log(`DAI allowance: ${allowance}`);
+  const allowance = await contract.allowance(ownerAddress, routerAddress);
+  // console.log(`${contract.name()} allowance: ${allowance}`);
 
   console.log(`Tx successful with hash: ${createReceipt1.hash}`);
 };
@@ -169,10 +149,13 @@ const approveDAI = async () => {
   try {
     await getBalance();
     await getInfo();
-    await approveUSDC();
-    await approveUSDT();
-    // await approveWETH();
-    await approveDAI();
+    // await approve(USDC);
+    // await approve(USDT);
+    // await approve(WETH);
+    // await approve(DAI);
+    await approve(A);
+    await approve(B);
+    await approve(C);
   } catch (error) {
     console.log(error);
   }

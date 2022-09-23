@@ -17,6 +17,9 @@ const USDC = process.env.USDC;
 const USDT = process.env.USDT;
 // const WETH = process.env.WETH;
 const DAI = process.env.DAI;
+const A = process.env.A;
+const B = process.env.B;
+const C = process.env.C;
 
 const provider = new ethers.providers.StaticJsonRpcProvider(
   process.env.PROVIDER_RPC,
@@ -162,6 +165,39 @@ const addLiquidityUSDC_DAI = async () => {
   console.log(`Tx successful with hash: ${createReceipt.hash}`);
 };
 
+const createPairA_B = async () => {
+  const createReceipt = await factory.createPair(A, B, {
+    // gasPrice: ethers.utils.parseUnits("10", "gwei"),
+    // gasLimit: 1_000_000,
+    // from: ownerAddress,
+  });
+  await createReceipt.wait();
+
+  console.log(`Tx successful with hash: ${createReceipt.hash}`);
+};
+
+const createPairB_C = async () => {
+  const createReceipt = await factory.createPair(B, C, {
+    // gasPrice: ethers.utils.parseUnits("10", "gwei"),
+    // gasLimit: 1_000_000,
+    // from: ownerAddress,
+  });
+  await createReceipt.wait();
+
+  console.log(`Tx successful with hash: ${createReceipt.hash}`);
+};
+
+const createPairA_C = async () => {
+  const createReceipt = await factory.createPair(A, C, {
+    // gasPrice: ethers.utils.parseUnits("10", "gwei"),
+    // gasLimit: 1_000_000,
+    // from: ownerAddress,
+  });
+  await createReceipt.wait();
+
+  console.log(`Tx successful with hash: ${createReceipt.hash}`);
+};
+
 let allPairsLength;
 
 const getAllPairsLength = async () => {
@@ -190,6 +226,10 @@ const getPair = async (tokenA, tokenB) => {
     await getProviderInfo();
     await getInfo();
     await getNonce();
+
+    await createPairA_B();
+    await createPairB_C();
+    await createPairA_C();
 
     // await createPairUSDC_USDT();
     // await addLiquidityUSDC_USDT();
